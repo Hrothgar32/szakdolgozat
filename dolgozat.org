@@ -1,0 +1,56 @@
+#+cite_export: natbib ./abbrvnat_hu.bst
+#+bibliography: allamvizsga.bib
+#+title: Szakdolgozat
+#+LATEX_CLASS_OPTIONS: [final, 12pt] {ubb_dolgozat}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \submityear{2022}
+#+LATEX_HEADER: \doctypeHU{Szakdolgozat}
+#+LATEX_HEADER: \doctypeEN{Diploma Thesis}
+#+LATEX_HEADER: \doctypeRO{Lucrare de licenta}
+#+LATEX_HEADER: \specHU{Informatika}
+#+LATEX_HEADER: \specEN{Computer Science}
+#+LATEX_HEADER: \specRO{Informatică}
+#+LATEX_HEADER: \titleHU{Szakdolgozat cím}
+#+LATEX_HEADER: \titleEN{License thesis title}
+#+LATEX_HEADER: \titleRO{Titlu lucrare licență}
+#+LATEX_HEADER: \authorHU{Zediu Álmos-Ágoston}
+#+LATEX_HEADER: \authorRO{Álmos-Ágoston Zediu}
+#+LATEX_HEADER: \authorEN{Álmos-Ágoston Zediu}
+#+LATEX_HEADER: \tutorHU{dr. Bodó Zalán}
+#+LATEX_HEADER: \tutorRO{dr. Bodó Zalán}
+#+LATEX_HEADER: \tutorEN{dr. Bodó Zalán}
+#+LATEX_HEADER: \pagenumbering{gobble}
+
+* Bevezetés
+* Technológiai alapok
+** Clojure
+A Clojure programozási nyelv egy dinamikus funkcionális nyelv, mely ötvözi a JVM platform előnyeit a Lisp nyelvek
+kifejezőkészségével.
+*** Funkcionális programozás Clojureben
+
+A Clojureben a függvények az elsőrendű absztrakciók, képesek vagyunk akár argumentumként is kezelni őket, stb.
+
+#+begin_src clojure :exports both :results value list
+(defn my-adder [a b]
+  (+ a b))
+
+(def my-five-adder (partial my-adder 5))
+(map my-five-adder [1, 2, 3, 4])
+#+end_src
+
+*** Perzisztens adatstruktúrák
+Rich Hickey az adatstruktúráit az ideális hasítófákra alapozta [cite:@bagwellIdealHashTrees2001]. Egy konceptuális elképzelésért
+rátekinthetünk erre a képre:
+
+[[file:images/perzisztens-vektor.jpg]]
+
+A lényegi rész az, hogy ahhoz, hogy olyan adatstruktúrák, mint a vektorok performánsak legyenek, de perzisztensek, szükségünk van
+specializált bináris fák felépítésére.
+* Algoritmusok
+** Locality sensitive hashing
+Lehet beszélni erről a [cite:@charikarSimilarityEstimationTechniques], vagy pedig,
+
+** SVD
+[cite:@brandFastOnlineSVD2003]
+
+#+print_bibliography:

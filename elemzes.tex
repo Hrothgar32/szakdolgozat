@@ -1,0 +1,91 @@
+%!TEX root = dolgozat.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Eredmények bemutatása és értékelése}\label{ch:elemzes}
+
+
+\section{Az utazóügynök feladata}
+
+A standard utazóügynök feladat a következõ:
+
+Adott egy súlyozott gráf G = (V,E) a cij súly az i és j csomópontokat
+összekötõ élre vontakozik, és a cij érteke egy pozitiv szám. Találd meg azt a
+körutat, amelynek minimális a költsége.
+
+\section{Az utazóügynök feladatára vonatkozó heurisztikák}
+
+Az utazóügynök feladata egy np-teljes feladat. A megoldás megtalálására túl
+sok idõ szükséges, ezért heurisztikákat használunk.
+
+\subsection{Beszúrási herusztika}
+
+A beszúrási heurisztikát akkor használjuk, amikor egy új 
+csomópontot akarunk beszúrni a körútba. úgy szúrunk 
+be egy új csomópontot , hogy a körút hossza minimális 
+legyen. A csomópontot minden pozícióba megpróbáljuk 
+beszúrni, és mindig kiszámoljuk a költséget. Az új 
+pozícioja a csomópontnak a körútban az a pozício lesz, 
+ahol a költség minimális.
+
+\subsection{Körútjavító heurisztika}
+
+A körút javito heurisztikakat arra használjuk, hogy meglévõ 
+megoldásokat javitsunk. A legismertebb heurisztikak a 2-opt és a 
+3-opt heurisztikak.
+
+\subsubsection{A 2-opt herurisztika}
+
+A 2 opt heurisztika megprobal talalni 2 elet, amelyet el lehet tavolitani, 
+és 2 elet, amelyet be lehet szúri, ugy, hogy egy körútat 
+kapjunk, amelynek a költsége kisebb mint az eredetié. Euklideszi 
+távolságoknál a 2-opt csere, kiegyenesíti a 
+körútat, amely saját magát keresztezi.
+
+A 2-opt algoritmus tulajdonkáppen kivesz két élet a 
+körútból, és újra összeköti a két 
+keletkezett útat. Ezt 2-opt lépésként szokták emlegetni. 
+Csak egyetlen módon lehet a két keletkezett útat 
+összekötni úgy, hogy körútat kapjunk. Ezt csak akkor 
+tesszük meg, ha a keletkezendõ körút rövidebb lesz. Addig 
+veszünk ki éleket, és kötjük össze a keletkezett 
+utakat, ameddig már nem lehet javítani az úton. Igy a 
+körút 2-optimális lesz. A következõ kép egy gráfot 
+mutat amelyen végrehajtunk egy 2-opt mozdulatot.
+
+\subsubsection{A genetikus algoritmus}
+
+A gentikus algoritmusok biologia alapú algoritmusok. Az 
+evolúciót utánozzák, és ez által fejlesztenek ki 
+megoldásokat, sokszor nagyon nehéz feladatokra. Az általános 
+gentikus algoritmusnak a következõ lépéseit 
+különböztethetjük meg:
+
+\emph{1. Létrehoz egy véletlenszerû kezdeti állapotot}
+
+Egy kezdeti populációt hozunk létre, véletlenszerûen a 
+lehetséges megoldásokból. Ezeket kromoszómáknak 
+nevezzük. Ez különbözik a szimbolikus MI rendszerektõl, ahol 
+a kezdeti állapot egy feladatra nézve adott.
+
+\emph{2. Kiszámítja a megoldások alkalmasságát}
+
+Minden kromoszómához egy alkalmasságot rendelünk, attól 
+függõen, hogy mennyire jó megoldást nyújt a feladatra. 
+
+\emph{3. Keresztezés}
+
+Az alkalmasságok alapján kivalásztunk néhány 
+kromoszómát, és ezeket keresztezzük. Eredményûl két 
+kromoszómát kapunk, amelyek az apa és az anya kromoszóma 
+génjeinek a kombinációjából állnak. Ezt a folyamatot 
+keresztezésnek nevezzük. Keresztezéskor tulajdonképpen 
+két részmegoldást vonunk össze, és azt reméljük, 
+hogy egy jobb megoldás fog keletkezni.
+
+\emph{4. A következõ generáció létrehozása}
+
+Ha valamelyik a kromoszómák közül tartalmaz egy megoldást, 
+amely elég közel van, vagy egyenlõ a keresett megoldással, akkor 
+azt mondhatjuk , hogy megtaláltuk a megoldást a feladatra. Ha ez a 
+feltétel nem teljesûl, akkor a következõ generáció is át 
+fog menni az \textbf{a.-c}. lépéseken. Ez addig folytatódik, 
+ameddig egy megoldást találunk.

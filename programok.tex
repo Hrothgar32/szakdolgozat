@@ -1,0 +1,30 @@
+%!TEX root = dolgozat.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Fontosabb programkódok listája}\label{ch:progik}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Itt van valamennyi Prolog kód, megfelelõen magyarázva (komment-elve). A programok beszúrása az\\
+\verb+\lstinputlisting[multicols=2]{progfiles/lolepes.pl}+\\
+paranccsal történik, és látjuk, hogy a példában a \verb+progfiles+ könyvtárba tettük a file-okat.
+
+Az alábbi kód Prolog nyelvbõl példa. Az \verb+\lstset{language=Prolog}+ paranccsal a programnyelvet változtathatjuk meg, ezt a \code{listings} csomag teszi lehetõvé \cite{listingCite}, amely nagyon jól dokumentált.
+
+\lstinputlisting[language=Prolog]{progfiles/lolepes.pl}
+%
+% opciók:
+% ,multicols=2
+
+\section{Kódrészletek beszúrása \texttt{minted}del}
+
+\begin{listing}[b!]
+  \inputminted{java}{progfiles/HelloWorld.java}
+  \caption{Példakódrészlet Java-ban}
+  \label{lst:javahw}
+\end{listing}
+
+Egy szintaxiskiemelt Java példaalkalmazást láthatunk \aref{lst:javahw}. kódrészletben. Ezek a részletek is ábrának számítanak, ezért számozva vannak, utalunk rájuk s ráhagyjuk a \LaTeX-re az elrendezésüket. Ha csak egy rövid részletet szeretnénk beszúrni, ezt megtehetjük inline módon is a következőképpen:
+
+\begin{minted}{java}
+    System.out.println("I am some inline code");
+\end{minted}

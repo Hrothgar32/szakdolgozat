@@ -1,0 +1,227 @@
+\usepackage[magyar]{babel}
+\selectlanguage{magyar}
+\usepackage{t1enc}
+\usepackage[utf8]{inputenc}% FONTS
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+\usepackage{indentfirst}
+\usepackage[bottom]{footmisc}
+\usepackage{newtxtt}
+
+% FONTS for typewriter
+%\usepackage[scaled=0.7]{luximono}
+%\renewcommand\ttdefault{ul9}
+
+\usepackage[titles]{tocloft}
+% aesthetic spacing redefines that look nicer
+\setlength{\cftbeforechapskip}{0.3ex}
+\setlength{\cftbeforesecskip}{0.0ex}
+% Helvetica-Narrow Bold for Chapter entries
+\renewcommand{\cftchapfont}{%
+  \fontsize{11}{13}\usefont{OT1}{phv}{bc}{n}\selectfont
+}
+\addtolength{\belowcaptionskip}{1pt}
+\addtolength{\abovecaptionskip}{-12pt}
+
+\usepackage{pgf,tikz}
+\usetikzlibrary{shapes,arrows,calc}
+\usepackage[final]{listings}
+
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage{latexsym}
+\usepackage{multicol}
+\usepackage{setspace,relsize}
+
+%%% bibliography
+% \usepackage[square]{natbib}
+% \usepackage[numbers,sort]{natbib}
+\usepackage[square,sort]{natbib}
+\usepackage{natbibspacing}
+%%
+
+\renewcommand{\cite}{\protect\citep}
+\newcommand{\citeN}{\protect\citet}
+
+%% CODE
+\definecolor{codeCol}{rgb}{0,0.15,0.15}
+\definecolor{codeBGCol}{rgb}{0.8,0.9,0.99}
+\newcommand{\code}[1]{%
+  \texttt{\textbf{\color{codeCol}{#1}}}%
+}
+
+\definecolor{linkCol}{rgb}{0.2, 0.0, 0.1}
+\definecolor{citeCol}{rgb}{0.1, 0.2, 0.3}
+\definecolor{urlCol} {rgb}{0.2, 0.2, 0.5}
+%%
+\usepackage[%
+    raiselinks=true,  %
+    colorlinks=true,  %
+    plainpages=true,  %
+    pdfpagelabels,    %
+    citecolor=citeCol,urlcolor=urlCol,linkcolor=linkCol,
+    unicode
+]{hyperref} % MUST be the LAST package included
+%%
+
+%%
+%% Julia definition (c) 2014 Jubobs
+%%
+\lstdefinelanguage{Julia}%
+  { keywordsprefix=\@,%
+    morekeywords={Any,Bool,Complex128,Complex64,Float32,Float64,Function,Inf,Int,Int16,Int32,Int64,Int8,Integer,Matrix,Nan,None,Nothing,Real,String,Symbol,Tuple,Uint,Uint16,Uint32,Uint64,Uint8,Vector,%
+    abstract,applicable,assert,baremodule,begin,bitstype,break,catch,ccall,const,continue,convert,%
+    dlopen,dlsym,do,eachrow,edit,else,elseif,end,eps,error,exit,export,finalizer,for,function,global,hash,%
+    hcat,if,im,immutable,import,importall,in,invoke,is,isa,isequal,let,load,local,%
+    macro,method_exists,module,new,ntuple,pi,promote,promote_type,quote,rand,randn,realmax,%
+    realmin,return,size,sizeof,subtype,sum,system,throw,try,tuple,type,typealias,typemax,typemin,typeof,%
+    vcat,uid,using,var,while,whos%
+  },
+   sensitive=true,%
+   alsoother={$},%
+   morecomment=[l]{\#},%
+   morecomment=[n]{\#=}{=\#},%
+   morestring=[s]{"}{"},%
+   morestring=[m]{'}{'},%
+}[keywords,comments,strings]%
+
+\definecolor{algBgCol}{rgb}{0.95,0.95,1.00}
+% define the wanted font for all highlightings here
+\lstset{%
+    language=Julia,
+    frame=ltrb,
+    framesep=2pt,
+    basicstyle=\relsize{-1}\ttfamily,
+    keywordstyle=\bfseries\color{blue},
+    identifierstyle=\color{purple!70!blue}\bfseries,
+    commentstyle=\color{brown},
+    stringstyle=\slshape\color{green!30!red},
+    showstringspaces=false,
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=5,
+    numbersep=5pt,
+    backgroundcolor=\color{algBgCol},
+    lineskip=-0.3ex,
+    breaklines=true,
+    nolol,
+    extendedchars=true,
+    inputencoding=utf8,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1 {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1 {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1 {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1 {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1 {Â}{{\^A}}1  {Ê}{{\^E}}1  {Î}{{\^I}}1 {Ô}{{\^O}}1  {Û}{{\^U}}1 {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1 {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1 {ã}{{\~a}}1 {õ}{{\~o}}1 {Ã}{{\~A}}1 {Õ}{{\~O}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1 {¡}{{!`}}1 {°}{{\textdegree}}1 {º}{{\textordmasculine}}1 {ª}{{\textordfeminine}}1 {λ}{{$\lambda$}}1 {₁}{{$_1$}}1 {₂}{{$_2$}}1 {₃}{{$_3$}}1 {₀}{{$_0$}}1 {²}{{$^2$}}1 {σ}{{$\sigma$}}1 {α}{{$\alpha$}}1 {∂}{{$\partial$}}1 {δ}{{$\delta$}}1 {∇}{{$\nabla$}}1 {ϵ}{{$\epsilon$}}1 {π}{{$\pi$}}1 {μ}{{$\mu$}}1
+}
+
+%%%%%%%%%%%% Theorem, Proof, etc. environments %%%%%%%%%%%%%%%%
+\usepackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{tet}{Tétel}[chapter]
+\newtheorem{lem}[tet]{Lemma}
+\newtheorem{kov}[tet]{Következmény}
+\newtheorem*{tetel}{Tétel} %számozás nélküli tétel! ne használd, csak ha nagyon muszáj!
+\theoremstyle{definition}
+\newtheorem{ert}[tet]{Értelmezés}
+\newtheorem{pld}[tet]{Példa}
+\theoremstyle{remark}
+\newtheorem{meg}[tet]{Megjegyzés}
+\renewcommand{\qedsymbol}{$\blacksquare$} %bizonyítás végén fekete négyzet.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% italic abbreviations
+\newcommand{\stb}{{\it stb.}}
+\newcommand{\un}{{\it{\'un.}}}
+
+% first line is used where there are NO bold fonts to use in MATH
+%\newcommand{\vc}[1]{{\ensuremath{\pmb { #1 } }}}
+\newcommand{\vc}[1]{{\ensuremath{\boldsymbol { #1 } }}}
+
+%%%%%%%%% COLOR STUFF %%%%%%%%%%%%
+\definecolor{brown}   {rgb}{0.6,0.3,0.1}
+\definecolor{cyan}    {rgb}{0,0.9,0.9}
+\definecolor{magenta} {rgb}{0.9,0.2,0.9}
+\definecolor{red}     {rgb}{0.75, 0.15, 0.15}
+\definecolor{green}   {rgb}{0.15, 0.75, 0.15}
+\definecolor{blue}    {rgb}{0.1, 0.1, 0.6}
+\definecolor{yellow}  {rgb}{1, 1, 0.35}
+\definecolor{al_white} {rgb}{0.45, 0.45, 0.75}
+\newcommand{\red}[1]{\color{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+\newcommand{\black}[1]{\textcolor{black}{#1}}
+\newcommand{\brown}[1]{\textcolor{brown}{#1}}
+\newcommand{\cyan}[1]{\textcolor{cyan}{#1}}
+\newcommand{\magenta}[1]{\textcolor{magenta}{#1}}
+\newcommand{\yellow}[1]{\textcolor{yellow}{#1}}
+\newcommand{\white}[1]{\textcolor{white}{#1}}
+
+
+% hyphenation
+\begingroup
+% Make `=' to be seen as an explicit hyphen inside \hyphenation:
+\lccode`\==`\-
+
+%      % Example: Declare hyphenation points of `government-founded':
+%      \hyphenation{gov-ern-ment=-foun-ded}
+
+\hyphenation{
+  a-xo-no-kon
+  bal-ol-da-li
+  be-csült
+  be-csúsz-nak
+  bi-zony-ta-lan-ság
+  di-men-zió-csök-ken-tõ
+  el-osz-lás
+  el-osz-lá-sa
+  e-red-mé-nye-ként
+  ér-té-kek-hez
+  fel-ír-ha-tó
+  fel-é-pí-ti
+  fo-lya-ma-tok-kal
+  függ-vény
+  függ-vé-nyek
+  függ-vé-nyét
+  függ-vény-rõl
+  függ-vény-tér-nek
+  függ-vény-cso-port-nak
+  gon-dol-ko-dó
+  Gaussz=-fo-lya-ma-tok-kal
+  ge-ne-rál-ja
+  hogy
+  i-deg-rend-sze-rünk-nek
+  il-lesz-ke-dõ
+  kap-csol-juk
+  kép-let
+  kép-le-tét
+  ki-szá-mí-ta-ni
+  kom-plex-itá-sa
+  ma-gya-ráz-ni
+  ma-xi-mi-zá-lá-sán
+  meg-ha-tá-ro-zá-sa
+  meg-ha-tá-roz-ni
+  meg-ta-lá-lá-sa
+  met-szés-pont-já-nál
+  mi-nõ-sé-ge
+  mi-ni-mi-zál-ja
+  mo-del-lek
+  mo-del-le-zés-ben
+  mû-ve-let
+  négy-ze-tek
+  négy-ze-tes
+  osz-tály
+  osz-tá-lyoz
+  osz-tá-lyo-zó
+  össze-a-dás
+  pa-ran-csok
+  sú-lyok-hoz
+  szak-i-ro-da-lom-ban
+  szá-mí-tó-gép=-tech-no-ló-gia
+  sze-mi-de-fi-nit-nek
+  sze-mi-de-fi-nit
+  sze-rin-ti
+  szük-ség-sze-rû
+  ter-mé-sze-te-sen
+  tu-laj-don-ság-nál
+  va-la-mi-lyen
+  }
+
+\endgroup

@@ -1,0 +1,150 @@
+%!TEX root = dolgozat.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Matlab és Netlab ismertetõ}\label{ch:MAT}
+
+\begin{osszefoglal}
+	A következõkben a jegyzet során használt Matlab nyelvet
+	mutatjuk be és definiáljuk a használt függvényeket. A Matlab programnyelven írták meg a NETLAB csomagot, mellyel nagyon könnyen lehet mintafelismerõ algoritmusokat elemezni.
+\end{osszefoglal}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Rövid ismertetõ}\label{sec:MAT:bev}
+
+A Matlab nyelv egy {\em interpreter}. A változókat létrehozzuk,
+nincs szükség azok deklarálására. A változókat
+megfeleltetésekkel  hozzuk létre. A változók lehetnek: {
+% \renewcommand{\baselinestretch}{0.9}\normalsize
+\begin{description}
+    \setlength{\itemsep}{0.04mm}
+    \item[valós] típusúak -- például \code{a=ones(5,1);}, amelyekrõl a rendszer megjegyzi, hogy mekkorák és a megfelelõ mennyiségû memóriát lefoglalja. A változók alapértelmezetten mátrixok, azonban lehetõség van magasabb fokú tenzorok definíciójára is, például az \code{b=ones(5,5,2);} egy $5\times 5\times 2$-es méretû tenzort hoz létre, mely két darab $5\times 5$-ös mátrixot tárol és melyekre a \code{b(:,:,1)},  valamint a \code{b(:,:,2)} parancsokkal hivatkozunk. Egy mátrixban egy egész sort {\em kettõspont}tal választunk ki. A Matlab-ban nincsenek egész vagy logikai típusú változók.
+    \item[sztring] típusúak -- például \code{s='a1b2c3d4'} egy sztringet hoz létre. A sztringek karakter típusú vektorok, melyekkel az összes mátrix mûvelet is végezhetõ.
+    \item[cella] típusúak -- például \code{c=\{'sty',[1;2;3;4;5;6],2\}}, mindegyik elem lehet különbözõ típusú és méretû. A cellák elemeire a \code{c\{3\}} jelöléssel hivatkozunk és nem tudunk a vektorokra illetve a mátrixokra jellemzõ mûveletek alkalmazni azokon.
+\end{description}
+} Mint általában, a Matlab rendszerben is segít a \code{help}
+parancs, mely egy adott parancshoz ad magyarázatot: a \code{help
+<függvény>} a függvényhez tartozó magyarázatot jeleníti meg. A
+rendszerbe be van építve egy további segítség, a \code{demo}
+parancs, mely példákon keresztül mutatja be a {Matlab} mûködését
+és az interpreter jelleg által nyújtott lehetõségeket.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Matlab mûveletek}\label{sec:MAT:muv}
+
+A {Matlab} nyelvben a vektorokra jellemzõ mûveletek jelölése
+intuitív: a mátrix transzponáltját a \code{bt=b'} mûvelet, a
+mátrix-szorzatot a \code{c=b(:,:,1)*a} jelöli. Amennyiben a
+mûveletek operandusai nem megfelelõ méretûek, a rendszer
+hibaüzenetet ír ki. A szokásos aritmetikai mûveleteken kívül
+ismeri a rendszer a hatványozást is, a $\hat{~}$ jelöléssel,
+melyek mind érvényesek a mátrixokra is. Az osztáshoz például két
+mûvelet is tartozik, melyek az $A\cdot X = B\; \Leftrightarrow \;
+X=A\backslash B$, valamint a $X\cdot A = B \; \Leftrightarrow \;
+X=A/B$ lineáris egyenleteket oldják meg.
+
+Sokszor szeretnénk, ha elemenként végezne a rendszer mûveleteket a mátrixokon, ezt a mûveleteknek pontokkal való prepozíciójával tesszük. Például a \code{C=(b(:,:,2))$\hat{~}$2} a mátrix önmagával való szorzásának az eredményét, a \code{C=(b(:,:,2)).$\hat{~}$2} a mátrix elemeinek a négyzeteit tartalmazó mátrixot adja eredményül.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Matlab függvények}\label{sec:MAT:fugg}
+
+A jegyzet során a programokban gyakran alkalmaztuk a következõ függvényeket:
+% { \renewcommand{\baselinestretch}{0.98}\normalsize
+\begin{description}
+    \setlength{\itemsep}{0.04mm}
+    \item[rand] -- egy véletlen számot térít vissza a $[0,1]$ intervallumból az intervallumon egyenletes eloszlást feltételezve. Argumentum nélkül a függvény egy nulla és egy közötti véletlen számot, egy argumentummal egy $k\times k$ méterû véletlen mátrixot, egy vektorra pedig egy tenzort térít vissza, melynek méreteit a vektor elemei tartalmazzák. A {\bf randn} hasonlóan véletlen változókat visszatérítõ függvény, azonban azok nulla átlagú és egy szórású normális eloszlást követnek.
+    \item[ones] -- a fenti esethez hasonlóan egy vektort, mátrixot vagy tenzort térít vissza, azonban az elemeket $1$-gyel tölti fel. A {\bf zeros} az elemeket lenullázza.
+    \item[linspace] -- a bemenõ argumentumok skalárisak és a függvény visszatéríti az elsõ két argumentum mint intervallum $N$ részre való felosztásának a vektorát; az $N$ a harmadik bemenõ változó.
+    \item[randperm] -- egy argumentummal a $k$ hosszúságú $[1,\ldots,k]$ vektor egy véletlen permutációját téríti vissza.
+    \item[union] -- a lista elemeit halmazként használva egyesíti a két bemenõ halmazt.
+    \item[setdiff] -- a lista elemeit halmazként használva visszatéríti az argumentumok metszetét. Használhatjuk még a {\bf unique} és az {\bf ismember} parancsokat a halmazzal való mûveletekre.
+    \item[find] -- indexeket térít vissza. Egy vektor azon elemeinek indexét, mely egy bizonyos feltételnek eleget tesz. Használják a vektor elemeinek szelekciójára.
+    \item[repmat] -- elsõ argumentuma egy mátrix, amit adott sokszorossággal bemásol az eredménybe. A sokszorosságot a második argumentum adja meg.
+    \item[reshape] -- argumentumai egy vektor vagy mátrix illetve egy méret paraméter. A függvény az elsõ argumentum elemeit a második argumentumban található méretek szerint formázza át. Pl. a \code{v} $256$ hosszú vektort az \code{m} $16\times 16$-os vektorba a \code{m=reshape(v,[16,16])} paranccsal alakítjuk át.
+    \item[meshgrid] -- az elsõ argumentum elemeit $X$-tengelyként, a második argumentumét $Y$-tengelyként használva két $m\times n$-es mátrixot térít vissza, ahol az elemek a négyzetháló $X$, illetve $Y$ koordinátái oszlop-szerinti bejárásban. Hasznos amikor egy felületet szeretnénk kirajzolni.
+    \item[diag] -- ha a bemenõ argumentum egy mátrix, akkor az átlón levõ elemek vektora az eredmény, ha pedig egy vektor, akkor az az átlós mátrix, mely nulla a fõátló elemeit kivéve, ott meg a bemenõ vektor elemei találhatók. Igaz a \code{b = diag(diag(b))} állítás.
+    \item[inline] -- egy függvény, mely segít rövid függvényeket -- általában egysorosakat -- definiálni, a függvényekben az alapértelmezett argumentum az $x$, több argumentum esetén a sorrendet is lehet specifikálni.
+    \item[load] -- egy korábban elmentett állapottér változóit állítja vissza. A változók elmentéséhez használjuk a {\bf save} parancsot.
+    \item[fprintf] -- egy vektor eleit formázva kiírja, a 'C'-hez hasonló szintakszisban. Hasonlóan mûködnek a {\bf disp}, a {\bf sprintf}, valamint a {\bf num2str} parancsok.
+    \item[acosd] -- az argumentumra alkalmazott inverz koszinusz függvény, fokokban kifejezve. Más trigonometriai függvények a szokásosak: {\bf sin}, {\bf cos}, {\bf tan}, {\bf atan}, melyeket lehet elemenként és egyben is alkalmazni, ekkor az eredmény a vektorok elemeire alkalmazott mûveletek vektora.
+    \item[chol] -- egy négyzetes pozitív definit mátrix Cholesky-felbontása. Az $A$ mátrix Cholesky-alakja egy olyan $C$ mátrix, mely csak a fõátlón és az alatt tartalmaz nullától különbözõ elemeket {\em és} fennáll az $A = C\cdot C^T$ egyenlõség. Figyeljük meg, hogy a Cholesky-alakot a négyzetgyök általánosításának lehet tekinteni.
+    \item[plot] -- két vektort megadva kirajzolja az $(x_1(i),x_2(i))$ pontokat és azokat összeköti egy vonallal. Egy argumentum esetén $x_1=[1,\ldots,N]$ és $x_2$ a bemenõ paraméter. Opcionálisan lehet stílusparamétereket is megadni. A {\bf plot3} paranccsal háromdimenzióban lehet pontokat, vonalakat megjeleníteni.
+    \item[hist] -- egy adott adatvektor elemeinek a gyakoriságát rajzolja ki. Alapértelmezetten a vektor legkisebb és legnagyobb eleme közötti intervallumot osztja fel $10$ részre és számolja az egyes szakaszokba esõ pontok számát. Úgy az intervallum mérete, mint a részintervallumok számossága illetve mérete változhat.
+    \item[contour] -- egy $Z$ mátrix által definiált felület kontúrjait rajzolja ki. A felület generálásánál általában használjuk a {\bf meshgrid} parancsot. A felületek rajzolására használhatjuk a {\bf surf} parancsot is.
+    \item[figure] -- létrehoz egy új ábrát illetve, amennyiben létezik a kívánt ábra, akkor aktívvá teszi azt.
+    \item[subfigure mnk] -- létrehoz az ábrán egy részábrát úgy, hogy az eredeti ábra terét $m\times n$ részre osztja, majd annak a $k$-adik komponensét teszi aktívvá.
+    \item[xlim] -- az aktuális rajzon beállítja az $X$ tengely alsó és felsõ határát. Ugyanígy mûködnek az {\bf ylim} és {\bf zlim} parancsok az $Y$ illetve a $Z$ tengelyekre.
+    \item[quadprog] -- az $x^THx + b^Tx + c$ másodfokú egyenlet minimumát határozza meg, ahol feltételezzük, hogy a megoldásokat az $A x>0$ konvex doméniumra szûkítjük. Bõvebb információk \citeN{Boyd04} könyvében.
+\end{description}
+% }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Netlab bevezetõ}\label{sec:MAT:Netlab}
+
+A {Netlab} neurális modellek hatékony implementációit
+tartalmazza. A programcsomag egy egséges felületet nyújt a létezõ
+algoritmusok gyors teszteléséhez és az új algoritmusok írásához.
+A különbözõ módszerek közös jellemzõje, hogy egy változóba --
+általában ennek neven \code{net} és egy struktúra -- gyûjti össze
+a modell paramétereit. Ehhez általában elõször specifikáljuk a
+modellt; ennek a függvénynek a neve ugyanaz, mint a modell neve.
+Amennyiben szükséges, akkor a \code{<modellnév>init} paranccsal
+lehet más paramétereket is beállítani. A modelleket a
+\code{<modellnév>train} paranccsal lehet tanítani, ahol általában
+paraméterként kerül a tanuló adathalmaz illetve az optimalizálási
+folyamatot jellemzõ más konstansok. Amikor megvan az eredmény,
+akkor a tanult -- becsült -- modell paramétereit használjuk a
+\code{<modellnév>fwd} paranccsal. Ahol nem lehetséges az új
+adatokra a tesztelés, ott a paraméterek terében tudunk mintát
+vételezni a \code{<modellnév>sample} függvény segítségével.
+
+Az általunk használt modellek a következõk:
+\begin{description}
+    \setlength{\itemsep}{0.04mm}
+    \item[mlp] -- a többrétegû neurális háló;
+    \item[rbf] -- az RBF típusú háló;
+    \item[kmeans] -- a k-közép algoritmus;
+    \item[som] -- a SOM vagy Kohonen-háló;
+\end{description}
+
+A \code{net} struktúrának van egy azonosítója, a \code{net.type}
+mezõ és a többi paraméter ennek az azonosítónak is a függvénye.
+További mezõk a bemenõ illetve kimeneti adatok dimenzióit, az
+aktivációs függvények típusait, valamint a különbözõ
+kapcsolatokhoz rendelt súlymátrixokat tárolják.
+
+Az optimalizálás szintén egységesen történik, minden modellnek van
+hibafüggvénye, ezt a \code{<modellnév>err} függvény tartalmazza.
+Az optimalizálási rutin a \code{netopt}, mely a struktúrát, az
+adatokat, valamint egy \code{options} vektort kap paraméterként és
+a visszaadott struktúra tartalmazza az optimalizált modellt.
+Ahhoz, hogy heterogén struktúrájú modelleket lehessen használni,
+minden modellhez kell írjunk egy \code{<modellnév>pak}, illetve
+egy \code{<modellnév>unpak} függvényt, mely a paramétereket a
+struktúrából egy vektorba, illetve visszaalakítja. Az
+\code{options} vektor a \code{netopt} függvényt paraméterezi. Egy
+$14$ hosszúságú vektor, melynek fõbb értékei: {
+\renewcommand{\baselinestretch}{0.98}\normalsize
+\begin{description}
+    \setlength{\itemsep}{0.04mm}
+    \item[\code{options(1)}] -- a hibafüggvény értékeinek a kiírása. $+1$-re minden lépésben kiírja a hibát, nullára csak a végén, negatív értéknél nem jelenít meg semmit;
+    \item[\code{options(2)}] -- a megállási feltétel abszolút pontossága: amennyiben két egymásutáni lépésben az $\theta$ paraméterek kevesebbet változnak, akkor az algoritmus leáll;
+    \item[\code{options(3)}] -- az \code{options(2)}-höz hasonló küszöbérték, azonban ez a hibafüggvény értékeit vizsgálja;
+
+    \item[\code{options(10)}] -- tárolja és visszaadja a hibafüggvény kiértékelésének a számát;
+
+    \item[\code{options(11)}] -- tárolja és visszaadja a hibafüggvény gradiense hívásának a számát;
+
+    \item[\code{options(14)}] -- a lépések maximális száma, alapértelmezetten $100$.
+\end{description}
+}
+
+A {Netlab} csomagban implementálva van sok hasznos lineáris és
+nemlineáris modell, mint például a PCA módszer, valamint annak valószínûségi
+kiterjesztése, a {\bf ppca} módszer. Megtalálható az
+általánosított lineáris modell -- {\bf glm} --, számos konjugált
+gradiens módszer és sok más. Jelen felsorolásban említettünk
+néhányat a használt illetve a további feladatok során használható
+programok közül, ezt a teljesség igénye nélkül tettük, az
+érdeklõdõ hallgatónak ajánljuk a {Netlab} hivatalos honlapját a
+\url{http://www.ncrg.aston.ac.uk/netlab}\label{link:netlab2}
+oldalt és \citeN{Nabney02} {Netlab} könyvét.

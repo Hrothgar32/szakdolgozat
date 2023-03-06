@@ -1,0 +1,127 @@
+%!TEX root = minta_dolgozat.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Alapok}\label{ch:ALAP}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{osszefoglal}
+	A fejezetek elején egy rövid összefoglalót teszünk. Ez a rész opcionális.
+	
+\end{osszefoglal}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{A gépi tanulás}\label{sec:ALAP:ml}
+
+A gépi tanulás neve  \citeN{Mitchell97} azonos címû -- ``{\em Machine Learning}'' -- könyvéből származtatható.
+A könyv alapján azt a kutatási területet nevezzük így, amelyben a cél olyan programok írása, amelyek  futtatásuk során fejlődnek, vagyis valamilyen szempont szerint jobbak, okosabbak lesznek.%
+\footnote{ %
+Részlet \citeN{Mitchell97} könyvéből:\newline
+    ``The field of machine learning is concerned with the question of how to construct computer programs    that automatically improve with experience.''
+}  %
+Itt az ``okosság'' metaforikus: a futási idő folyamán valamilyen mérhető jellemzőnek a javulását értjük alatta.
+%
+Például a felhasználás kezdetén a szövegfelismerő még nem képes a szövegek azonosítására, azonban a használat -- és a felhasználói utasítások -- után úgy módosítja a működési paramétereit, hogy a karakterek egyre nagyobb hányadát tudja felismerni.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Adatelemzés}\label{sec:ALAP:adatelem}
+
+A mesterséges intelligencia azon módszereit, amelyeket numerikus
+vagy {\em
+  enyhén strukturált}%
+\footnote{%
+ {\bf Enyhén} strukturált (nagyon felületesen): az adatok komponensei
+  (dimenziók) közötti kapcsolat nem túl bonyolult.
+}%
+adatokra tudunk alkalmazni, gépi tanulásos módszereknek nevezzük
+\cite{Mitchell97}.  A gépi tanulás e meghatározás alapján egy
+szerteágazó tudományág, amelynek keretén belül sok módszerről és
+ennek megfelelően sok alkalmazási területről beszélhetünk. A
+korábban említett neurális modellekkel ellentétben a központban
+itt az adatok vannak: azok típusától függően választunk például a
+binomiális modell és a normális eloszlás, a fő- vagy
+független-komponensek módszere vagy a k-közép és EM
+algoritmusok között.
+Egyre több adatunk van, azonban az ``információt'' megtalálni egyre nehezebb.%
+\footnote{%
+    David Donoho, a Stanford Egyetem professzora szerint a XXI. századot az adatok határozzák meg: azok gyûjtése, szállítása, tárolása, megjelenítése, illetve az adatok {\bf felhasználása}.
+}%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Szerkesztés}\label{sec:ALAP:szerkeszt}
+
+A következőkben áttekintjük a \LaTeX dokumentumok szerkesztésének alapjait.
+
+Átfogó referenciák a következők:
+\begin{description}%
+	\item[\cite{LatexNotSoShort}] -- egy \LaTeX gyorstalpaló. A könyvben nagyon
+	  célirányosan mutatják be a szerkesztési szabályokat és a fontosabb parancsokat.
+	\item[\cite{LatexNotSoShortHU}] -- a gyorstalpaló magyar változata egy BME-s
+	  csapat jóvoltából.
+	\item[\cite{Doob95,MittelbachEtAl04}] -- az angol nyelvû alapkönyvek. Kérésre az
+	  utóbbi -- \cite{MittelbachEtAl04} -- elérhetővé tehető.
+\end{description}
+Természetesen a Kari könyvtárban is találtok könyvészetet. A fentebb említetteken kívül nagyon sok internetes oldal tartalmaz \LaTeX szerkesztésről bemutatókat:
+
+
+\begin{figure}[t]
+  \centering
+  \pgfimage[width=0.2\linewidth]{images/bayes}
+  \caption[Példa képek beszúrására]%
+  {Példa képek beszúrására: a képen rev. Thomas Bayes látható. A képek után {\em kötelezően} szerepelnie kell a forrásnak:~\url{http://en.wikipedia.org/wiki/Thomas_Bayes}}
+  \label{fig:ALAP:sm1}
+\end{figure}
+
+Képeket beszúrni a\\
+ \verb+\pgfimage[width=0.4\linewidth]{images/bayes}+\\
+paranccsal lehet, ahol a\\
+\verb+width=0.4\linewidth+ \\
+a kép szélességét jelenti. Amennyiben a magasság nincs megadva -- mintjelen esetben -- akkor azt automatikusan számítja ki a rendszer, az eredeti kép arányait figyelembe véve.
+Egy másik jellegzetesség az, hogy a képek kiterjesztését nem adjuk meg -- a \LaTeX megkeresi a számára elfogadható kiterjesztéseket, azok listájából az elsőt használja. A .JPG, .PNG, .TIFF, valamint a .PDF kiterjesztések is használhatók.
+
+Két kép egymás mellé tétele a \verb+tabular+ környezet-mintával lehetséges, amint a \ref{fig:ALAP:sm2} ábrán látjuk.
+Amennyiben grafikonunk van, általában ajánlott VEKTOROSAN menteni -- ezt általában a PDF driverrel tesszük -- az eredmény a \ref{fig:ALAP:sm3} ábrán látható.
+
+\begin{figure}[t]
+  \centering
+  \begin{tabular}{ccc}
+		  \pgfimage[height=4cm]{images/bayes}
+		  &
+		  \pgfimage[height=4cm]{images/vapnik}
+	\end{tabular}
+  \caption[Példa képek beszúrására egy táblában]%
+  {Példa képek beszúrására: a bal oldalon rev. Thomas Bayes, a jobb oldalon egy jelenkori matematikus, Vladimir Vapnik látható.\\
+  {\white .}\hfill\url{http://en.wikipedia.org/wiki/Vladimir_Vapnik}}
+  \label{fig:ALAP:sm2}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \pgfimage[width=0.7\linewidth]{images/parzen}
+  \caption[Példa grafika beszúrására]%
+  {Példa grafika beszúrására.}
+  \label{fig:ALAP:sm3}
+\end{figure}
+
+A szerkesztés folyamata során ajánlott a:
+\begin{itemize}
+	\item különböző strukturális elemek használata: a \verb+\chapter+, \verb+\section+, \verb+\subsection+, \verb+\subsubsection+ parancsok.
+	\item a listák használata felsorolásoknál;
+  \item a tétel típusú environmentek és a bizonyítás-environment használata (alább bemutatunk néhányat, az összes értelmezett tétel típust megtalálod a definitions.sty fájlban).
+\end{itemize}
+
+\begin{ert}
+  Az $n$ pozitív egész számot \emph{négyzetmentesnek} nevezzük, ha az $n$ prímtényezős felbontásában minden prím legfentebb az első hatványon szerepel.
+\end{ert}
+\begin{pld}
+  Az 1, 7 és 33 természetes számok négyzetmentesek, míg a 9 és a 45 nem.
+\end{pld}
+\begin{tet}\label{tet:negyzment}
+  Az $n$ pozitív egész szám akkor és csak akkor négyzetmentes, ha minden $n$ elemű Abel csoport ciklikus.
+\end{tet}
+\begin{proof}
+  Túl hosszú!
+\end{proof}
+\begin{meg}
+  \Aref{tet:negyzment} tétel a végesen generált Abel csoportok jellemzési tételének a következménye. 
+\end{meg}
