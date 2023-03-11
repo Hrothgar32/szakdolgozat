@@ -1,4 +1,4 @@
-\begin{thebibliography}{3}
+\begin{thebibliography}{4}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -23,5 +23,13 @@ Brand, M.
 Charikar, M.~S.
 \newblock Similarity {{Estimation Techniques}} from {{Rounding Algorithms}}.
 \newblock page~9.
+
+\bibitem[McIlroy(1960)]{mcilroyMacroInstructionExtensions1960}
+McIlroy, M.~D.
+\newblock Macro instruction extensions of compiler languages.
+\newblock \emph{Communications of the ACM}, 3\penalty0 (4):\penalty0 214--220,
+  Apr. 1960.
+\newblock ISSN 0001-0782.
+\newblock \doi{10.1145/367177.367223}.
 
 \end{thebibliography}

@@ -1,4 +1,4 @@
-% Created 2023-02-21 Tue 20:08
+% Created 2023-03-11 Sat 20:18
 % Intended LaTeX compiler: pdflatex
 \documentclass[final, 12pt] {ubb_dolgozat}{book}
 \usepackage[utf8]{inputenc}
@@ -48,15 +48,13 @@
 
 
 \chapter{Bevezetés}
-\label{sec:orge75e293}
-\chapter{Technológiai alapok}
-\label{sec:org6631bef}
-\section{Clojure}
-\label{sec:org676d80f}
+\label{sec:org5136892}
+\chapter{Clojure}
+\label{sec:org8c47bb4}
 A Clojure programozási nyelv egy dinamikus funkcionális nyelv, mely ötvözi a JVM platform előnyeit a Lisp nyelvek
 kifejezőkészségével.
-\subsection{Funkcionális programozás Clojureben}
-\label{sec:orgad2e12f}
+\section{Funkcionális programozás Clojureben}
+\label{sec:org15d5cf3}
 
 A Clojureben a függvények az elsőrendű absztrakciók, képesek vagyunk akár argumentumként is kezelni őket, stb.
 
@@ -64,18 +62,18 @@ A Clojureben a függvények az elsőrendű absztrakciók, képesek vagyunk akár
 (defn my-adder [a b]
   (+ a b))
 
-(def my-five-adder (partial my-adder 3))
+(def my-five-adder (partial my-adder 5))
 (map my-five-adder [1, 2, 3, 4])
 \end{minted}
 
 \begin{itemize}
 \item (``\#'user/my-adder'')
 \item (``\#'user/my-five-adder'')
-\item (``(4 5 6 7)'')
+\item (``(6 7 8 9)'')
 \end{itemize}
 
-\subsection{Perzisztens adatstruktúrák}
-\label{sec:org27c12b4}
+\section{Perzisztens adatstruktúrák}
+\label{sec:org164b5cb}
 Rich Hickey az adatstruktúráit az ideális hasítófákra alapozta \citep{bagwellIdealHashTrees2001}. Egy konceptuális elképzelésért
 rátekinthetünk erre a képre:
 
@@ -85,14 +83,76 @@ rátekinthetünk erre a képre:
 
 A lényegi rész az, hogy ahhoz, hogy olyan adatstruktúrák, mint a vektorok performánsak legyenek, de perzisztensek, szükségünk van
 specializált bináris fák felépítésére.
+
+\section{Homoikonicitás}
+\label{sec:orgc57cbe3}
+Ami talán leginkább megkülönbözteti a Lisp nyelvcsaládban levő nyelveket a többiektől, az a  homoikonicitás \citep{mcilroyMacroInstructionExtensions1960} tulajdonság, vagyis maga a programkód
+formálható ugyanazzal a nyelvvel futás közben, mint amiben meg volt írva.
+
+Hasonló viselkedést elérhetünk nem homoikonikus nyelvekben is, mint mondjuk a Java vagy a C\# reflection rendszere, vagy
+pedig a Python dekorátor szintaxisa, viszont a Lisp nyelvek makrórendszereivel azért könnyebb valamilyen szinten dolgozni, mivel nincsenek speciálisan megkülönböztetve a programban
+felhasznált adatstruktúrák szintaxisai, és a programot felépítő, elágazásokat, ismétlő ciklusokat, függvénydefiníciókat jelző nyelvi struktúrák szintaxisai.
+
+Vegyük példának okáért a következő egyszerű programot:
+
+\begin{minted}[]{clojure}
+(defn add-list-numbers [number-list]
+  (apply + number-list))
+
+(add-list-numbers '(1 2 3 4 5))
+\end{minted}
+
+\begin{itemize}
+\item (``\#'user/add-list-numbers'')
+\item (``15'')
+\end{itemize}
+
+Látható, hogy a függvénydefiníció kerek zárójelekbe írtuk, a függvény argumentumai pedig egy vektorszerű struktúrában kaptak helyet, utána pedig maga a függvényhívás is zárójelek között volt. Érdekes módon az átadott lista szintúgy zárójelezve adódott át, viszont raktunk elé egy aposztrófot is.
+
+Erre azért volt szükség, mivel a Lisp nyelvekben a kerek zárójel listát jelöl, és minden lista, hacsak nem jelezzük aposztróffal, függvénymeghívással jár. Annak köszönhetően viszont, hogy ``listákban'' programozunk, képesek vagyunk a programrészleteinket mint lista, vektor, vagy halmazelemeket
+módosítani átrendezni.
+
+\subsection{Makrók}
+\label{sec:org3fb8753}
+A Lisp makrók olyan programszerkezetek, amelyek egy programrészletet kapnak meg, módosítják azt, és a módosított programrészlet eredményét futtatják végül le. Fontos megjegyezni, hogy ez fordítási időben történik, nem futási időben.
+
+\begin{enumerate}
+\item {\bfseries\sffamily TODO} Ezt még átfogalmazni picit
+\label{sec:org91f5f97}
+Egy jó példa arra, hogyan segíthet ez fejlesztésben és talán még fontosabb, adatelemzés során, az az úgynevezett ``threading'' makró.
+
+\begin{minted}[]{clojure}
+(defn generate-masked-grouped-ratings [dataset-path]
+  (-> (load-ratings dataset-path)
+      (tc/dataset)
+      (tc/complete :user :item)
+      (tc/group-by :user {:result-type :as-seq})))
+\end{minted}
+
+Ez a makró be van építve a nyelvbe, és forráskódja is rövid.
+
+\begin{minted}[]{clojure}
+(defmacro ->
+  [x & forms]
+  (loop [x x, forms forms]
+    (if forms
+      (let [form (first forms)
+            threaded (if (seq? form)
+                       (with-meta `(~(first form) ~x ~@(next form)) (meta form))
+                       (list form x))]
+        (recur threaded (next forms)))
+      x)))
+\end{minted}
+\end{enumerate}
+
 \chapter{Algoritmusok}
-\label{sec:org32b5602}
+\label{sec:org92a14c3}
 \section{Locality sensitive hashing}
-\label{sec:org54a0d69}
+\label{sec:orge4d1368}
 Lehet beszélni erről a \citep{charikarSimilarityEstimationTechniques}, vagy pedig,
 
 \section{SVD}
-\label{sec:org9b2edd9}
+\label{sec:org27215df}
 \citep{brandFastOnlineSVD2003}
 
 \bibliographystyle{./abbrvnat_hu.bst}

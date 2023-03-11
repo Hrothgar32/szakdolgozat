@@ -1,6 +1,7 @@
 #+cite_export: natbib ./abbrvnat_hu.bst
 #+bibliography: allamvizsga.bib
 #+title: Szakdolgozat
+#+latex_class: book-noparts
 #+LATEX_CLASS_OPTIONS: [final, 12pt] {ubb_dolgozat}
 #+LATEX_HEADER: \usepackage{minted}
 #+LATEX_HEADER: \submityear{2022}
@@ -22,11 +23,10 @@
 #+LATEX_HEADER: \pagenumbering{gobble}
 
 * Bevezetés
-* Technológiai alapok
-** Clojure
+* Clojure
 A Clojure programozási nyelv egy dinamikus funkcionális nyelv, mely ötvözi a JVM platform előnyeit a Lisp nyelvek
 kifejezőkészségével.
-*** Funkcionális programozás Clojureben
+** Funkcionális programozás Clojureben
 
 A Clojureben a függvények az elsőrendű absztrakciók, képesek vagyunk akár argumentumként is kezelni őket, stb.
 
@@ -38,7 +38,7 @@ A Clojureben a függvények az elsőrendű absztrakciók, képesek vagyunk akár
 (map my-five-adder [1, 2, 3, 4])
 #+end_src
 
-*** Perzisztens adatstruktúrák
+** Perzisztens adatstruktúrák
 Rich Hickey az adatstruktúráit az ideális hasítófákra alapozta [cite:@bagwellIdealHashTrees2001]. Egy konceptuális elképzelésért
 rátekinthetünk erre a képre:
 
@@ -46,6 +46,62 @@ rátekinthetünk erre a képre:
 
 A lényegi rész az, hogy ahhoz, hogy olyan adatstruktúrák, mint a vektorok performánsak legyenek, de perzisztensek, szükségünk van
 specializált bináris fák felépítésére.
+
+** Homoikonicitás
+Ami talán leginkább megkülönbözteti a Lisp nyelvcsaládban levő nyelveket a többiektől, az a  homoikonicitás [cite:@mcilroyMacroInstructionExtensions1960] tulajdonság, vagyis maga a programkód
+formálható ugyanazzal a nyelvvel futás közben, mint amiben meg volt írva.
+
+Hasonló viselkedést elérhetünk nem homoikonikus nyelvekben is, mint mondjuk a Java vagy a C# reflection rendszere, vagy
+pedig a Python dekorátor szintaxisa, viszont a Lisp nyelvek makrórendszereivel azért könnyebb valamilyen szinten dolgozni, mivel nincsenek speciálisan megkülönböztetve a programban
+felhasznált adatstruktúrák szintaxisai, és a programot felépítő, elágazásokat, ismétlő ciklusokat, függvénydefiníciókat jelző nyelvi struktúrák szintaxisai.
+
+Vegyük példának okáért a következő egyszerű programot:
+
+#+begin_src clojure :defines add-list-numbers :exports both :results value list
+(defn add-list-numbers [number-list]
+  (apply + number-list))
+
+(add-list-numbers '(1 2 3 4 5))
+#+end_src
+
+#+RESULTS:
+- ("#'user/add-list-numbers")
+- ("15")
+
+Látható, hogy a függvénydefiníció kerek zárójelekbe írtuk, a függvény argumentumai pedig egy vektorszerű struktúrában kaptak helyet, utána pedig maga a függvényhívás is zárójelek között volt. Érdekes módon az átadott lista szintúgy zárójelezve adódott át, viszont raktunk elé egy aposztrófot is.
+
+Erre azért volt szükség, mivel a Lisp nyelvekben a kerek zárójel listát jelöl, és minden lista, hacsak nem jelezzük aposztróffal, függvénymeghívással jár. Annak köszönhetően viszont, hogy "listákban" programozunk, képesek vagyunk a programrészleteinket mint lista, vektor, vagy halmazelemeket
+módosítani átrendezni.
+
+*** Makrók
+A Lisp makrók olyan programszerkezetek, amelyek egy programrészletet kapnak meg, módosítják azt, és a módosított programrészlet eredményét futtatják végül le. Fontos megjegyezni, hogy ez fordítási időben történik, nem futási időben.
+
+**** TODO Ezt még átfogalmazni picit
+Egy jó példa arra, hogyan segíthet ez fejlesztésben és talán még fontosabb, adatelemzés során, az az úgynevezett "threading" makró.
+
+#+begin_src clojure
+(defn generate-masked-grouped-ratings [dataset-path]
+  (-> (load-ratings dataset-path)
+      (tc/dataset)
+      (tc/complete :user :item)
+      (tc/group-by :user {:result-type :as-seq})))
+#+end_src
+
+Ez a makró be van építve a nyelvbe, és forráskódja is rövid.
+
+#+begin_src clojure
+(defmacro ->
+  [x & forms]
+  (loop [x x, forms forms]
+    (if forms
+      (let [form (first forms)
+            threaded (if (seq? form)
+                       (with-meta `(~(first form) ~x ~@(next form)) (meta form))
+                       (list form x))]
+        (recur threaded (next forms)))
+      x)))
+#+end_src
+
 * Algoritmusok
 ** Locality sensitive hashing
 Lehet beszélni erről a [cite:@charikarSimilarityEstimationTechniques], vagy pedig,
