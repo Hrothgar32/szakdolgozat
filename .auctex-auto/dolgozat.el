@@ -3,13 +3,13 @@
  (lambda ()
    (TeX-add-to-alist 'LaTeX-provided-package-options
                      '(("inputenc" "utf8") ("fontenc" "T1") ("ulem" "normalem")))
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "href")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperref")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperimage")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperbaseurl")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "nolinkurl")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "url")
    (add-to-list 'LaTeX-verbatim-macros-with-braces-local "path")
+   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "url")
+   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "nolinkurl")
+   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperbaseurl")
+   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperimage")
+   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperref")
+   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "href")
    (add-to-list 'LaTeX-verbatim-macros-with-delims-local "path")
    (TeX-run-style-hooks
     "inputenc"
@@ -23,13 +23,21 @@
     "amssymb"
     "capt-of"
     "hyperref"
-    "definitions"
-    "biblatex")
+    "minted"
+    "natbib")
    (LaTeX-add-labels
-    "sec:org68ba897"
-    "sec:orga83fc37"
-    "sec:org01c66eb")
+    "sec:org5136892"
+    "sec:org8c47bb4"
+    "sec:org15d5cf3"
+    "sec:org164b5cb"
+    "sec:orgc57cbe3"
+    "sec:org3fb8753"
+    "sec:org91f5f97"
+    "sec:org92a14c3"
+    "sec:orge4d1368"
+    "sec:org27215df")
    (LaTeX-add-bibliographies
+    "/home/hrothgar32/Documents/Egyetem/Allamvizsga/Dolgozat/allamvizsga"
     "/home/hrothgar32/Documents/allamvizsga/allamvizsga"))
  :latex)
 

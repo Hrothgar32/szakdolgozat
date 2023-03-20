@@ -24,7 +24,7 @@
 
 * Bevezetés
 * Clojure
-A Clojure programozási nyelv egy dinamikus funkcionális nyelv, mely ötvözi a JVM platform előnyeit a Lisp nyelvek
+A Clojure egy dinamikus funkcionális nyelv, mely ötvözi a JVM platform előnyeit a Lisp nyelvek
 kifejezőkészségével.
 ** Funkcionális programozás Clojureben
 
@@ -39,7 +39,7 @@ A Clojureben a függvények az elsőrendű absztrakciók, képesek vagyunk akár
 #+end_src
 
 ** Perzisztens adatstruktúrák
-Rich Hickey az adatstruktúráit az ideális hasítófákra alapozta [cite:@bagwellIdealHashTrees2001]. Egy konceptuális elképzelésért
+Rich Hickey az adatstruktúráit az ideális hasítófákra alapozta [cite:@jayasingheExtremeAmplitudeMassive2019] [cite:@bagwellIdealHashTrees2001]. Egy konceptuális elképzelésért
 rátekinthetünk erre a képre:
 
 [[file:images/perzisztens-vektor.jpg]]
@@ -74,9 +74,8 @@ Erre azért volt szükség, mivel a Lisp nyelvekben a kerek zárójel listát je
 módosítani átrendezni.
 
 *** Makrók
-A Lisp makrók olyan programszerkezetek, amelyek egy programrészletet kapnak meg, módosítják azt, és a módosított programrészlet eredményét futtatják végül le. Fontos megjegyezni, hogy ez fordítási időben történik, nem futási időben.
+A Lisp makrók olyan programszerkezetek, amelyek kódrészletet kapnak argumentumként, módosítják azt, és a módosított programrészlet eredményét futtatják végül le. Fontos megjegyezni, hogy a végső kód legenerálása fordítási időben történik, nem futási időben.
 
-**** TODO Ezt még átfogalmazni picit
 Egy jó példa arra, hogyan segíthet ez fejlesztésben és talán még fontosabb, adatelemzés során, az az úgynevezett "threading" makró.
 
 #+begin_src clojure
@@ -87,7 +86,11 @@ Egy jó példa arra, hogyan segíthet ez fejlesztésben és talán még fontosab
       (tc/group-by :user {:result-type :as-seq})))
 #+end_src
 
-Ez a makró be van építve a nyelvbe, és forráskódja is rövid.
+Szerepe tulajdonképpen abból áll, hogy az első logikai egységet ami a nyíl mellett áll, "befűzi" a következő függvényhívás
+első argumentumaként és azon függvényhívás eredményét pedig ugyanúgy befűzi a következő függvényhívás első argumentumaként, és így tovább.
+
+Bár talán komplikáltnak tűnhet egy hasonló funkcionalitás implementálása, ezen makró forráskódja mindössze 10 sor, és
+kihasználja azt, hogy a "formok" (a Clojure kód kerek zárójelbe helyezett futtatható egysége) igazából listák, így a makró feladata egyszerűen a helyes futtatható lista megalkotása.
 
 #+begin_src clojure
 (defmacro ->
