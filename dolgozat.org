@@ -1,9 +1,6 @@
-#+cite_export: natbib ./abbrvnat_hu.bst
-#+bibliography: allamvizsga.bib
-#+title: Szakdolgozat
+#+title: Felhasználói értékeléseken alapuló collaborative filtering algoritmusok kiértékelése funkcionális környezetben
 #+latex_class: book-noparts
 #+LATEX_CLASS_OPTIONS: [final, 12pt] {ubb_dolgozat}
-#+LATEX_HEADER: \usepackage{minted}
 #+LATEX_HEADER: \submityear{2022}
 #+LATEX_HEADER: \doctypeHU{Szakdolgozat}
 #+LATEX_HEADER: \doctypeEN{Diploma Thesis}
@@ -11,7 +8,7 @@
 #+LATEX_HEADER: \specHU{Informatika}
 #+LATEX_HEADER: \specEN{Computer Science}
 #+LATEX_HEADER: \specRO{Informatică}
-#+LATEX_HEADER: \titleHU{Szakdolgozat cím}
+#+LATEX_HEADER: \titleHU{Felhasználói értékeléseken alapuló collaborative filtering algoritmusok kiértékelése funkcionális környezetben}
 #+LATEX_HEADER: \titleEN{License thesis title}
 #+LATEX_HEADER: \titleRO{Titlu lucrare licență}
 #+LATEX_HEADER: \authorHU{Zediu Álmos-Ágoston}
@@ -21,23 +18,45 @@
 #+LATEX_HEADER: \tutorRO{dr. Bodó Zalán}
 #+LATEX_HEADER: \tutorEN{dr. Bodó Zalán}
 #+LATEX_HEADER: \pagenumbering{gobble}
+#+bibliography: allamvizsga.bib
+#+cite_export: natbib ./abbrvnat_hu.bst
 
 * Bevezetés
+Napjainkban egyre nagyobb hangsúly kerül a különböző ajánló rendszerekre, algoritmusokra melyek felhasználási területe
+igencsak kiterjedt, legyen akár szó e-commerce felületek termékajánlásáról, streaming szolgáltatások ízlésmeghatározásáról,
+vagy pedig a közösségi média oldalak fő bevételforrásának számító személyes reklámajánlásáról.
+
+A dolgozat fő tematikája három széles körben alkalmazott algoritmus, algoritmuscsalád ismertetése, előnyeinek és hátrányainak
+bemutatása, körbejárva az implementációs nehézségeket, kiértékelési metrikákat és az adott algoritmusok megfelelő környezetben
+való felhasználását.
+
+A három bemutatott algoritmus a Slope One, mely egy lineáris regressziónál egyszerűbb ajánlási modell egyetlen
+szabad paraméterrel, a Locality Sensitive Hashing, ami a hasonló ízléssel rendelkező felhasználók értékelési vektorait egy magas ütközési
+rátával rendelkező hasítófüggvénnyel csoportosítja, és a Singular Value Decomposition mátrix faktorizációs módszer, ami a felhasználók
+és az értékelt elemek közötti legfontosabb látens faktorokat hozza napvilágra.
+
+Egy másik bemutatott szempont az algoritmusok Clojure nyelvben való implementálása.  A Clojure egy funkcionális Lispre alapuló nyelv, mely a JVM
+platformon fut, nagy hangsúlyt fektet az adatvezérelt programozásra, az interaktív, REPL alapú fejlesztésre és a keretrendszerek helyett
+az egyszerű könyvtárakra, melyeket az Unix filozófia alapján modulárisan használunk fel.
+
 * Clojure
 A Clojure egy dinamikus funkcionális nyelv, mely ötvözi a JVM platform előnyeit a Lisp nyelvek
 kifejezőkészségével.
 ** Funkcionális programozás Clojureben
 
+
 A Clojureben a függvények az elsőrendű absztrakciók, képesek vagyunk akár argumentumként is kezelni őket, stb.
 
 #+begin_src clojure :exports both :results value list
-(defn my-adder [a b]
-  (+ a b))
+(defn my-adder [a b] (+ a b))
 
 (def my-five-adder (partial my-adder 5))
+
 (map my-five-adder [1, 2, 3, 4])
+
 #+end_src
 
+*** TODO Funkcionális nyelvekről kicsit általánosan.
 ** Perzisztens adatstruktúrák
 Rich Hickey az adatstruktúráit az ideális hasítófákra alapozta [cite:@jayasingheExtremeAmplitudeMassive2019] [cite:@bagwellIdealHashTrees2001]. Egy konceptuális elképzelésért
 rátekinthetünk erre a képre:
@@ -106,8 +125,162 @@ kihasználja azt, hogy a "formok" (a Clojure kód kerek zárójelbe helyezett fu
 #+end_src
 
 * Algoritmusok
+** Slope one
+A Slope One egy egyszerűen implementálható, de ennek ellenére meglepően jó eredményekkel
+rendelkező algoritmuscsalád melyet Anna Maclachlan és Daniel Lemire jelentettek meg.
+[cite:@lemireSlopeOnePredictors2008]
+
+Nevét onnan kapta, hogy a amíg az egyszerű lineáris regresszió esetén két paramétert becsülünk meg,
+itt elég csak egy paraméter, leegyszerűsítve a \(f(x) = ax + b\) modellt egy \(f(x) = x + b\) modellre. Abban az esetben, mikor
+felhasználói értékelésekről beszélünk nem egy adott termék vagy értékelendő tárgy individuális értékeléseit vizsgáljuk,
+hanem az egy-egy tárgy értékelései közötti átlagos különbséget.
+
+[[file:images/slopeexample.png]]
+
+
+*** Működési elv
+Az algoritmus dióhéjban összesíti a tárgyak közötti szavazatkülönbségeket,
+utána pedig ahhoz, hogy megközelítsük egy felhasználó ismeretlen szavazatát, összeadjuk a
+létező szavazatait a vizsgálandó tárgy és az létező szavazatok közötti átlagos különbségekkel,
+és súlyozott átlagot számolunk, ahol a súly az, hogy hányan szavaztak mindkét tárgyra.
+
+Ha a felhasználó \(u\)-ként jelöljük, a szavazatai halmazát \(S(u)\)-ként, akkor egy \(j\) tárgyra
+adott:
+
+\begin{equation}
+\hat{r}_{j|u} = \frac{\sum_{i \in S(u); i \not= j}{(\Delta{i,j} + u_{i})c_{j,i}}}{\sum_{i \in S(u) i \not= j} c_{j,i}}
+\end{equation}
+
+[cite:@lemireSlopeOnePredictors2008]
+
+Ahol \(c_{j,i} = card(S_{j,i}(R)\) vagyis a kardinalitása a \(j\) és \(i\)-re is szavazott embereknek.
+
+*** Implementáció
+Az ebben a szekcióban levő kód nagy része Henry Garner Clojureben való gépi tanulásról
+szóló könyvéből lett átvéve, [cite:@garnerClojureDataScience2015] , és a *top-n* ajánlási mechanizmussal együtt is alig tesz ki 50 sort.
+
+Először a listakonstruktor elvű *for* makróval tárgy párokat generálunk, majd egy üres *map* asszociatív struktúrából kiindulva leredukáljuk ezeket a párokat egy mapre, melyben
+minden az összes tárgyak közötti különbség el van mentve.
+
+#+begin_src clojure
+(defn conj-item-difference [dict [i j]]
+  (let [difference (-  (:rating j) (:rating i))]
+    (update-in dict [(:item i) (:item j)] conj difference)))
+
+(defn collect-item-differences [dict items]
+  (reduce conj-item-difference dict
+          (for [i items
+                j items
+                :when (not= i j)]
+            [i j])))
+
+(defn item-differences [user-ratings]
+  (reduce collect-item-differences {} user-ratings))
+#+end_src
+
+Ezután elmentjük a különbségek átlagát, és a közös szavazók számát.
+
+#+begin_src clojure
+(defn summarize-item-differences [related-items]
+  (let [f (fn [differences]
+            {:mean  (s/mean differences)
+             :count (count  differences)})]
+    (map-vals f related-items)))
+
+(defn slope-one-recommender [ratings]
+  (->> (item-differences ratings)
+       (map-vals summarize-item-differences)))
+#+end_src
+
+A felhasználási lépésben, amikor egy adott tárgyra szeretnénk értékelést megsaccolni,
+hozzáadjuk a meglevő szavazatokat a különbségekhez és elvégezzük a súlyozott átlagolást.
+
+#+begin_src clojure
+(defn candidates [recommender {:keys [rating item]}]
+  (->> (get recommender item)
+       (map (fn [[id {:keys [mean count]}]]
+              {:item id
+               :rating (+ rating mean)
+               :count count}))))
+
+(defn weighted-rating [[id candidates]]
+  (let [ratings-count (reduce + (map :count candidates))
+        sum-rating (map #(* (:rating %) (:count %)) candidates)
+        weighted-rating (/ (reduce + sum-rating) ratings-count)]
+    {:item id
+     :rating weighted-rating
+     :count  ratings-count}))
+#+end_src
+
+A top-n ajánlás már csak annyit ad hozzá, hogy elvégzi az egész adathalmazra a
+megközelítéseket, kiveszi a vizsgált felhasználó már értékelt tárgyait, és csökkenő sorrendbe helyezi az értékeléseket.
+
+#+begin_src clojure
+(defn slope-one-recommend [recommender rated top-n]
+  (let [already-rated  (set (map :item rated))
+        already-rated? (fn [{:keys [id]}]
+                         (contains? already-rated id))
+        recommendations (->> (mapcat #(candidates recommender %)
+                                     rated)
+                             (group-by :item)
+                             (map weighted-rating)
+                             (remove already-rated?)
+                             (sort-by :rating >))]
+    (take top-n recommendations)))
+#+end_src
+
 ** Locality sensitive hashing
-Lehet beszélni erről a [cite:@charikarSimilarityEstimationTechniques], vagy pedig,
+A Locality Sensitive Hashing egy olyan hasítófüggvényekre alapuló módszer, ami a legtöbb hasítófüggvény implementációval ellentétben nem minimizálja az ugyanolyan kimenetek, kulcsok
+számát, hanem maximalizálja, mivel a hasonló tárgyak, (esetünkben szavazatvektorok) hasonló kimenettel kell rendelkezzenek.
+
+*** Definíció
+Egy LSH séma egy olyan \(F\) hasítófüggvénycsalád, melyekre igaz, hogy a valószínűsége annak,
+hogy két \(x\), \(y\) objektum függvényértéke megegyezik, megegyezik a két függvény hasonlósági távolságával valamilyen metrika szerint. [cite:@charikarSimilarityEstimationTechniques]
+
+\begin{equation}
+Pr_{h \in F} [h(x) = h(y)] = sim(x, y)
+\end{equation}
+
+ahol \(sim(x,y) \in [0,1]\) természetesen.
+
+Ezzel egyrészt csoportosítani tudjuk a potenciálisan hasonló ízléssel rendelkezőeket, és ugyanakkor kompaktan, kevés helyfelhasználással később is fel tudjuk használni ezen csoportokat, ami segít a futási időn is persze.
+
+*** Véletlenszerű hiperterekre alapuló LSH
+Az ötlet a következő: egy \(R^{d}\)-ből levő vektorcsoport esetén mintavételezzünk egy normál eloszlású \(\overrightarrow{r}\) \(d\) dimenziós vektort. Ennek a vektornak a függvényében definiálhatjuk a következő \(h_{\overrightarrow(r)}\) függvényt:
+
+\begin{equation}
+h_{\overrightarrow(r)} (\overrightarrow{u})= \begin{cases}
+                                                1 & ha \overrightarrow{r} * \overrightarrow{u} \ge 0 \\
+                                                0 & ha \overrightarrow{r} * \overrightarrow{u} < 0
+                                                \end{cases}
+\end{equation}
+
+
+Ekkor \(\overrightarrow{u}\) és \(\overrightarrow{v}\) esetén igaz lesz, hogy:
+
+
+\begin{equation}
+Pr_{h \in F} [h(x) = h(y)] = 1 - \frac{\theta(\overrightarrow{ u }, \overrightarrow{ v })}{\pi}
+\end{equation}
+[cite:@charikarSimilarityEstimationTechniques]
+
+Vagyis annak a valószínűsége, hogy két vektor egyenkénti skaláris szorzata a véletlenszerűvel és az erre alkalmazott előjel függvény kimenete ugyanaz legyen megegyezik a két vektor között
+bezárt szög koszinuszával.
+Ezt először Goemans és Willamson bizonyította [cite:@goemansImprovedApproximationAlgorithms1995] egy a MAX-CUT relaxációjával foglalkozó cikkükben.
+
+Intuitívan arról van szó, hogy ha veszünk egy \(d\) dimenziós hiperteret, ahol \(d\) az adathalmazunkban levő tárgyak száma, akkor minden felhasználót el tudunk helyezni ebben a
+hipertérben, hisz a szavazataik meghatározzák a pozíciójukat, hisz d dimenziós vektorok.
+
+Egy véletlenszerűen felvett vektor normálvektora egy a hiperteret kettéosztó hipersíknak, vagyis
+a vele való skaláris szorzat előjele meghatározza, hogy egy pont a hipersík melyik felén helyezkedik el.
+
+Elég ilyen hipersíkot felvéve ki tudunk alakítani csoportokat, akik több hipersíknak is ugyanazon
+a felén vannak, ebből következve hasonlóak.
+
+
+[[file:images/randomprojection.png]]
+[cite:@RandomProjectionLocality]
+
 
 ** SVD
 [cite:@brandFastOnlineSVD2003]

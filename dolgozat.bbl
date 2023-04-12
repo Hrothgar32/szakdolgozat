@@ -1,9 +1,14 @@
-\begin{thebibliography}{4}
+\begin{thebibliography}{9}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Ran()]{RandomProjectionLocality}
+Random {{Projection}} for {{Locality Sensitive Hashing}} | {{Pinecone}}.
+\newblock
+  https://www.pinecone.io/learn/locality-sensitive-hashing-random-projection/.
 
 \bibitem[Bagwell(2001)]{bagwellIdealHashTrees2001}
 Bagwell, P., editor.
@@ -23,6 +28,39 @@ Brand, M.
 Charikar, M.~S.
 \newblock Similarity {{Estimation Techniques}} from {{Rounding Algorithms}}.
 \newblock page~9.
+
+\bibitem[Garner(2015)]{garnerClojureDataScience2015}
+Garner, H.
+\newblock \emph{Clojure for Data Science: Statistics, Big Data, and Machine
+  Learning for {{Clojure}} Programmers}.
+\newblock 2015.
+\newblock ISBN 978-1-78439-750-0.
+
+\bibitem[Goemans \'es
+  Williamson(1995)]{goemansImprovedApproximationAlgorithms1995}
+Goemans, M.~X. \'es Williamson, D.~P.
+\newblock Improved approximation algorithms for maximum cut and satisfiability
+  problems using semidefinite programming.
+\newblock \emph{Journal of the ACM}, 42\penalty0 (6):\penalty0 1115--1145, Nov.
+  1995.
+\newblock ISSN 0004-5411.
+\newblock \doi{10.1145/227683.227684}.
+
+\bibitem[Jayasinghe et~al.(2019)Jayasinghe, Stanek, Kochanek, Thompson,
+  Shappee, \'es Fausnaugh]{jayasingheExtremeAmplitudeMassive2019}
+Jayasinghe, T., Stanek, K.~Z., Kochanek, C.~S., Thompson, T.~A., Shappee,
+  B.~J., \'es Fausnaugh, M.
+\newblock An {{Extreme Amplitude}}, {{Massive Heartbeat System}} in the {{LMC
+  Characterized Using ASAS-SN}} and {{TESS}}.
+\newblock \emph{Monthly Notices of the Royal Astronomical Society},
+  489\penalty0 (4):\penalty0 4705--4711, Nov. 2019.
+\newblock ISSN 0035-8711, 1365-2966.
+\newblock \doi{10.1093/mnras/stz2460}.
+
+\bibitem[Lemire \'es Maclachlan(2008)]{lemireSlopeOnePredictors2008}
+Lemire, D. \'es Maclachlan, A.
+\newblock Slope {{One Predictors}} for {{Online Rating-Based Collaborative
+  Filtering}}, Sept. 2008.
 
 \bibitem[McIlroy(1960)]{mcilroyMacroInstructionExtensions1960}
 McIlroy, M.~D.
