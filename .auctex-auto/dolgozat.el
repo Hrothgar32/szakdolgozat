@@ -3,15 +3,6 @@
  (lambda ()
    (TeX-add-to-alist 'LaTeX-provided-package-options
                      '(("inputenc" "utf8") ("fontenc" "T1") ("ulem" "normalem")))
-   (add-to-list 'LaTeX-verbatim-environments-local "minted")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "href")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperref")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperimage")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperbaseurl")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "nolinkurl")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "url")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "path")
-   (add-to-list 'LaTeX-verbatim-macros-with-delims-local "path")
    (TeX-run-style-hooks
     "inputenc"
     "fontenc"
@@ -27,19 +18,27 @@
     "minted"
     "natbib")
    (LaTeX-add-labels
-    "sec:org41c75a4"
-    "sec:orgfefd3a7"
-    "sec:org55df85d"
-    "sec:org37134da"
-    "sec:org526be0e"
-    "sec:orgdca9e20"
-    "sec:orgee7fbcf"
-    "sec:org24ae2e5"
-    "sec:orgd2c28bf"
-    "sec:org5406cac"
-    "sec:orgce5f470")
+    "sec:orgb09a299"
+    "sec:orgea1e7a3"
+    "sec:org6904619"
+    "sec:orge90d83e"
+    "sec:org83c65db"
+    "sec:orgd358fa3"
+    "sec:orgedb3d9a"
+    "sec:org8e99296"
+    "sec:orga1b16ff"
+    "sec:orge333f2e"
+    "sec:orgfb1cdde"
+    "sec:org794ee58"
+    "sec:orge96aab6"
+    "sec:orgcbc7d39"
+    "sec:org52997f5"
+    "sec:org3160681"
+    "sec:orgdcd5dea"
+    "sec:org5fdbc15"
+    "sec:orgaf4729b"
+    "sec:orgfeef656")
    (LaTeX-add-bibliographies
-    "/home/hrothgar32/Documents/Egyetem/Allamvizsga/Dolgozat/allamvizsga"
     "/home/hrothgar32/Documents/allamvizsga/allamvizsga"))
  :latex)
 

@@ -10,7 +10,7 @@ Random {{Projection}} for {{Locality Sensitive Hashing}} | {{Pinecone}}.
 \newblock
   https://www.pinecone.io/learn/locality-sensitive-hashing-random-projection/.
 
-\bibitem[Bagwell(2001)]{bagwellIdealHashTrees2001}
+\bibitem[Bagwell(2001)]{bagwellidealhashtrees2001}
 Bagwell, P., editor.
 \newblock \emph{Ideal {{Hash Trees}}}.
 \newblock 2001.
@@ -29,7 +29,7 @@ Charikar, M.~S.
 \newblock Similarity {{Estimation Techniques}} from {{Rounding Algorithms}}.
 \newblock page~9.
 
-\bibitem[Garner(2015)]{garnerClojureDataScience2015}
+\bibitem[Garner(2015)]{garnerclojuredatascience2015}
 Garner, H.
 \newblock \emph{Clojure for Data Science: Statistics, Big Data, and Machine
   Learning for {{Clojure}} Programmers}.
@@ -47,7 +47,7 @@ Goemans, M.~X. \'es Williamson, D.~P.
 \newblock \doi{10.1145/227683.227684}.
 
 \bibitem[Jayasinghe et~al.(2019)Jayasinghe, Stanek, Kochanek, Thompson,
-  Shappee, \'es Fausnaugh]{jayasingheExtremeAmplitudeMassive2019}
+  Shappee, \'es Fausnaugh]{jayasingheextremeamplitudemassive2019}
 Jayasinghe, T., Stanek, K.~Z., Kochanek, C.~S., Thompson, T.~A., Shappee,
   B.~J., \'es Fausnaugh, M.
 \newblock An {{Extreme Amplitude}}, {{Massive Heartbeat System}} in the {{LMC
@@ -57,12 +57,12 @@ Jayasinghe, T., Stanek, K.~Z., Kochanek, C.~S., Thompson, T.~A., Shappee,
 \newblock ISSN 0035-8711, 1365-2966.
 \newblock \doi{10.1093/mnras/stz2460}.
 
-\bibitem[Lemire \'es Maclachlan(2008)]{lemireSlopeOnePredictors2008}
+\bibitem[Lemire \'es Maclachlan(2008)]{lemireslopeonepredictors2008}
 Lemire, D. \'es Maclachlan, A.
 \newblock Slope {{One Predictors}} for {{Online Rating-Based Collaborative
   Filtering}}, Sept. 2008.
 
-\bibitem[McIlroy(1960)]{mcilroyMacroInstructionExtensions1960}
+\bibitem[McIlroy(1960)]{mcilroymacroinstructionextensions1960}
 McIlroy, M.~D.
 \newblock Macro instruction extensions of compiler languages.
 \newblock \emph{Communications of the ACM}, 3\penalty0 (4):\penalty0 214--220,

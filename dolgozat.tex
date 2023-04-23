@@ -1,4 +1,4 @@
-% Created 2023-04-12 Wed 22:16
+% Created 2023-04-23 Sun 22:05
 % Intended LaTeX compiler: pdflatex
 \documentclass[final, 12pt] {ubb_dolgozat}{book}
 \usepackage[utf8]{inputenc}
@@ -12,6 +12,7 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
+\usepackage{minted}
 \submityear{2022}
 \doctypeHU{Szakdolgozat}
 \doctypeEN{Diploma Thesis}
@@ -47,7 +48,7 @@
 
 
 \chapter{Bevezetés}
-\label{sec:orgc1e576f}
+\label{sec:org258b10f}
 Napjainkban egyre nagyobb hangsúly kerül a különböző ajánló rendszerekre, algoritmusokra melyek felhasználási területe
 igencsak kiterjedt, legyen akár szó e-commerce felületek termékajánlásáról, streaming szolgáltatások ízlésmeghatározásáról,
 vagy pedig a közösségi média oldalak fő bevételforrásának számító személyes reklámajánlásáról.
@@ -65,13 +66,26 @@ Egy másik bemutatott szempont az algoritmusok Clojure nyelvben való implement�
 platformon fut, nagy hangsúlyt fektet az adatvezérelt programozásra, az interaktív, REPL alapú fejlesztésre és a keretrendszerek helyett
 az egyszerű könyvtárakra, melyeket az Unix filozófia alapján modulárisan használunk fel.
 
+\chapter{{\bfseries\sffamily TODO} Az adathalmazról}
+\label{sec:orge493ea2}
+Az adathalmaz a Minnesotai Egyetem MovieLens adathalmaza, mely 100 000 értékelést tartalmaz 943 felhasználótól
+1682 filmről. \citep{harperMovieLensDatasetsHistory2016}
 \chapter{Clojure}
-\label{sec:orga0d34c2}
+\label{sec:orgb838d60}
 A Clojure egy dinamikus funkcionális nyelv, mely ötvözi a JVM platform előnyeit a Lisp nyelvek
 kifejezőkészségével.
-\section{Funkcionális programozás Clojureben}
-\label{sec:org6cab19c}
+\section{Funkcionális nyelvekről kicsit általánosan.}
+\label{sec:org1246615}
+A funkcionális nyelvek fő alapelve az, hogy nincs mutálható memória, és ahelyett, hogy imperatív, egymáson
+és programállapoton alapuló utasításokkal dolgozunk, előtérbe helyezzük a kifejezéseket, és a ``tiszta'' mellékhatásoktól
+mentes függvényeket, melyeknek eredménye a bemeneti paraméterektől függ.
 
+\section{Funkcionális programozás Clojureben}
+\label{sec:orgf1d080a}
+A Clojure fő filozófiája az egyszerű adatszerkezetekkel, főleg mapekkel való modellezése a problémáknak. Ahelyett, hogy
+bonyolult absztrakciókat képezünk és enkapszuláljuk az adatainkat a rajtuk végzett műveletekkel (ezáltal ``objektumokat'',
+és ``metódusokat képezve''), vagy pedig előbb bonyolult típusosztályokkal algebrai adatstruktúrákat képzünk, előtérbe
+helyezzük az egyszerű adatstruktúrákat, és az egyszerű adatstruktúrákon operáló függvényeket.
 
 A Clojureben a függvények az elsőrendű absztrakciók, képesek vagyunk akár argumentumként is kezelni őket, stb.
 
@@ -90,11 +104,15 @@ A Clojureben a függvények az elsőrendű absztrakciók, képesek vagyunk akár
 \item (6 7 8 9)
 \end{itemize}
 
-\subsection{{\bfseries\sffamily TODO} Funkcionális nyelvekről kicsit általánosan.}
-\label{sec:org975914f}
 \section{Perzisztens adatstruktúrák}
-\label{sec:org99047e2}
-Rich Hickey az adatstruktúráit az ideális hasítófákra alapozta \citep{jayasingheExtremeAmplitudeMassive2019} \citep{bagwellIdealHashTrees2001}. Egy konceptuális elképzelésért
+\label{sec:org1ee9e0e}
+Egy lényegi kérdés ami felmerülhet funkcionális nyelvek esetén, az a memóriahasználat, és a futási idő problémája. Mivel minden változó alapvetően konstans, ezért minden egyes olyan
+művelet, ami imperatív nyelvekben az eredeti adatstruktúra változtatását vette volna igénybe (új elem beszúrás, törlés, tulajdonság megváltoztatása), a funkcionális nyelvekben
+egy ``módosított'' változatát adja vissza az eredeti algoritmusnak. Egy naiv háttérbeli implementáció esetén tehát egy esetleges tömb beszúrásnál le kellene másolni az egész tömböt.
+Itt jön be a perziztencia, és a strukturális megosztás ötlete. Ha van olyan része a memóriának, ami változatlan marad az új adatstruktúrában is, fölösleges azon a memóriarészen levő
+értékeket lemásolni, és több értelme van megosztani vele.
+
+A Clojure alap adatstruktúrái az ideális hasítófákra vannak alapozva. \citep{jayasingheExtremeAmplitudeMassive2019} \citep{bagwellIdealHashTrees2001}. Egy konceptuális elképzelésért
 rátekinthetünk erre a képre:
 
 \begin{center}
@@ -105,7 +123,7 @@ A lényegi rész az, hogy ahhoz, hogy olyan adatstruktúrák, mint a vektorok pe
 specializált bináris fák felépítésére.
 
 \section{Homoikonicitás}
-\label{sec:orgd9be8a4}
+\label{sec:orgac78198}
 Ami talán leginkább megkülönbözteti a Lisp nyelvcsaládban levő nyelveket a többiektől, az a  homoikonicitás \citep{mcilroyMacroInstructionExtensions1960} tulajdonság, vagyis maga a programkód
 formálható ugyanazzal a nyelvvel futás közben, mint amiben meg volt írva.
 
@@ -133,7 +151,7 @@ Erre azért volt szükség, mivel a Lisp nyelvekben a kerek zárójel listát je
 módosítani átrendezni.
 
 \subsection{Makrók}
-\label{sec:orgbbb13fd}
+\label{sec:org3a85caa}
 A Lisp makrók olyan programszerkezetek, amelyek kódrészletet kapnak argumentumként, módosítják azt, és a módosított programrészlet eredményét futtatják végül le. Fontos megjegyezni, hogy a végső kód legenerálása fordítási időben történik, nem futási időben.
 
 Egy jó példa arra, hogyan segíthet ez fejlesztésben és talán még fontosabb, adatelemzés során, az az úgynevezett ``threading'' makró.
@@ -164,11 +182,10 @@ kihasználja azt, hogy a ``formok'' (a Clojure kód kerek zárójelbe helyezett 
         (recur threaded (next forms)))
       x)))
 \end{minted}
-
 \chapter{Algoritmusok}
-\label{sec:org4a9fcba}
+\label{sec:org07732a4}
 \section{Slope one}
-\label{sec:orgd9d99eb}
+\label{sec:orge5ab5e1}
 A Slope One egy egyszerűen implementálható, de ennek ellenére meglepően jó eredményekkel
 rendelkező algoritmuscsalád melyet Anna Maclachlan és Daniel Lemire jelentettek meg.
 \citep{lemireSlopeOnePredictors2008}
@@ -184,7 +201,7 @@ hanem az egy-egy tárgy értékelései közötti átlagos különbséget.
 
 
 \subsection{Működési elv}
-\label{sec:orga8ae0c4}
+\label{sec:org79f1292}
 Az algoritmus dióhéjban összesíti a tárgyak közötti szavazatkülönbségeket,
 utána pedig ahhoz, hogy megközelítsük egy felhasználó ismeretlen szavazatát, összeadjuk a
 létező szavazatait a vizsgálandó tárgy és az létező szavazatok közötti átlagos különbségekkel,
@@ -202,7 +219,7 @@ adott:
 Ahol \(c_{j,i} = card(S_{j,i}(R)\) vagyis a kardinalitása a \(j\) és \(i\)-re is szavazott embereknek.
 
 \subsection{Implementáció}
-\label{sec:orgb38a3f8}
+\label{sec:org1b53c09}
 Az ebben a szekcióban levő kód nagy része Henry Garner Clojureben való gépi tanulásról
 szóló könyvéből lett átvéve, \citep{garnerClojureDataScience2015} , és a \textbf{top-n} ajánlási mechanizmussal együtt is alig tesz ki 50 sort.
 
@@ -277,12 +294,12 @@ megközelítéseket, kiveszi a vizsgált felhasználó már értékelt tárgyait
 \end{minted}
 
 \section{Locality sensitive hashing}
-\label{sec:org9a38e36}
+\label{sec:org2a7ee75}
 A Locality Sensitive Hashing egy olyan hasítófüggvényekre alapuló módszer, ami a legtöbb hasítófüggvény implementációval ellentétben nem minimizálja az ugyanolyan kimenetek, kulcsok
 számát, hanem maximalizálja, mivel a hasonló tárgyak, (esetünkben szavazatvektorok) hasonló kimenettel kell rendelkezzenek.
 
 \subsection{Definíció}
-\label{sec:org7f8d24c}
+\label{sec:orgd435de7}
 Egy LSH séma egy olyan \(F\) hasítófüggvénycsalád, melyekre igaz, hogy a valószínűsége annak,
 hogy két \(x\), \(y\) objektum függvényértéke megegyezik, megegyezik a két függvény hasonlósági távolságával valamilyen metrika szerint. \citep{charikarSimilarityEstimationTechniques}
 
@@ -295,7 +312,7 @@ ahol \(sim(x,y) \in [0,1]\) természetesen.
 Ezzel egyrészt csoportosítani tudjuk a potenciálisan hasonló ízléssel rendelkezőeket, és ugyanakkor kompaktan, kevés helyfelhasználással később is fel tudjuk használni ezen csoportokat, ami segít a futási időn is persze.
 
 \subsection{Véletlenszerű hiperterekre alapuló LSH}
-\label{sec:org83841f3}
+\label{sec:orged3279e}
 Az ötlet a következő: egy \(R^{d}\)-ből levő vektorcsoport esetén mintavételezzünk egy normál eloszlású \(\overrightarrow{r}\) \(d\) dimenziós vektort. Ennek a vektornak a függvényében definiálhatjuk a következő \(h_{\overrightarrow(r)}\) függvényt:
 
 \begin{equation}
@@ -318,7 +335,7 @@ Vagyis annak a valószínűsége, hogy két vektor egyenkénti skaláris szorzat
 bezárt szög koszinuszával.
 Ezt először Goemans és Willamson bizonyította \citep{goemansImprovedApproximationAlgorithms1995} egy a MAX-CUT relaxációjával foglalkozó cikkükben.
 
-Intuitívan arról van szó, hogy ha veszünk egy \(d\) dimenziós hiperteret, ahol \(d\) az adathalmazunkban levő tárgyak száma, akkor minden felhasználót el tudunk helyezni ebben a
+Intuitívan arról van szó, hogy ha veszünk egy \(d\)  dimenziós hiperteret, ahol \(d\) az adathalmazunkban levő tárgyak száma, akkor minden felhasználót el tudunk helyezni ebben a
 hipertérben, hisz a szavazataik meghatározzák a pozíciójukat, hisz d dimenziós vektorok.
 
 Egy véletlenszerűen felvett vektor normálvektora egy a hiperteret kettéosztó hipersíknak, vagyis
@@ -333,11 +350,124 @@ a felén vannak, ebből következve hasonlóak.
 \end{center}
 \citep{RandomProjectionLocality}
 
+\subsection{{\bfseries\sffamily TODO} Implementáció}
+\label{sec:orgdcc24b6}
+Az első lépés a random normálvektorok legenerálása:
 
-\section{SVD}
-\label{sec:orgb837e16}
-\citep{brandFastOnlineSVD2003}
+\begin{minted}[]{clojure}
+(defn generate-random-vectors [d nbits]
+  (nrand/rand-normal! 0 1 (nnat/dge d nbits)))
+\end{minted}
+
+A függvény amely kiszámítja mely ``vödörbe kerül'' egy felhasználó az értékelési vektora alapján
+
+\begin{minted}[]{clojure}
+(def threshold
+  "The sign function which translates a value into a binary 1 or 0."
+  (fn [x]
+    (if (> x 0.0)
+      1.0
+      0.0)))
+
+(defn calculate-lsh-hash
+  "Used to calculate the LSH hash of a random vector."
+  [user-vector rand-normals]
+  (. Integer parseInt (->> (ncore/mv rand-normals user-vector)
+                           (fmap threshold)
+                           (into [])
+                           (map int)
+                           (apply str)) 2))
+
+\end{minted}
+
+A függvény amely elvégzi a ``vödör'' generálást, és feltölti őket.
+
+\begin{minted}[]{clojure}
+(defn generate-lsh-buckets
+  "Generating the buckets for the stuff."
+  [all-items grouped-ratings rand-normals]
+  (loop [current-rating (first grouped-ratings)
+         remaining-ratings (rest grouped-ratings)
+         current-user (get-in current-rating [:user 0])
+         buckets {}]
+    (let [sparse-vector (-> (get-sparse-ratings all-items current-rating)
+                            (get-sparse-vector))
+          lsh-hash (calculate-lsh-hash sparse-vector rand-normals)
+          new-buckets (if (contains? buckets lsh-hash)
+                        (update buckets lsh-hash conj current-user)
+                        (conj buckets [lsh-hash [current-user]]))]
+      (if (empty? remaining-ratings)
+        new-buckets
+        (recur (first remaining-ratings) (rest remaining-ratings) (get-in (first remaining-ratings) [:user 0]) new-buckets)))))
+\end{minted}
+
+\section{Singular Value Decomposition (SVD)}
+\label{sec:org65ba81c}
+\subsection{Definíció}
+\label{sec:org408bf58}
+A Singular Value Decomposition (röviden SVD) egy mátrix faktorizációs módszer, melyben egy \(m  \times  n\) mátrixot felbontunk
+\(M=U \Sigma V^{*}\) módon, ahol \(U\) egy \(m \times n\) alakú unitáris mátrix, \(\Sigma\) egy \(m \times n\) alakú diagonális mátrix, \(V\) pedig egy \(n \times n\)
+unitáris mátrix. \(\Sigma\) átlón elhelyezkedő értékei a négyzetgyökei \(M * M\) sajátértékeinek, és sok SVD implementációban az értékek
+csökkenő sorrendben jelennek meg \(\Sigma\) főátlóján.
+
+\subsection{Felhasználás ajánlórendszerekben}
+\label{sec:orge4fc295}
+Hasznossága abban rejlik, hogy ha kiválasztjuk az \(r\) legnagyobb singular value-t (vagy röviden s-értéket) akkor meg tudjuk közelíteni az eredeti \(M\) mátrixot, egy másik, \(\widetilde{M}\) mátrixxal, ahol
+\(rank(\widetilde{M}) = r\) \citep{eckartApproximationOneMatrix1936a}. Ez azért tud hasznos lenni ajánlórendszerekben, mivel ezáltal le tudjuk redukálni az eltárolandó felhasználó-értékelt objektum
+kapcsolatok számát, és csak a redukált \(r\) rangú \(M, \Sigma, V^{*}\) mátrixokat tárolva helyet spórolunk, ugyanakkor ki tudjuk emelni az \(r\) legfontosabb ``látens faktort'', amik megadják az összefüggést
+bizonyos felhasználók és bizonyos filmekre adott értékelések között.
+
+\subsection{Implementáció}
+\label{sec:orgdd31aa7}
+Az alkalmazott implementáció alapjául Badrul N. Sarwar, George Karypis etc, Minnesotai Egyetem kutatóinak cikke szolgál, \citep{sarwarApplicationDimensionalityReduction2000}
+és felbontható a következő stádiumokra:
+
+Az implementációban a normalizálás az objektumok átlagos pontszámai alapján történtek, vagyis csoportosítva lettek a szavazatok objektum szerint és onnan kivontuk az átlagszavazatot:
+
+\begin{minted}[]{clojure}
+
+(def multiple-averages (-> grouped-ratings
+                    (tc/complete :user :item)
+                    (tc/group-by :item {:result-type :as-seq})))
+
+(def averages
+(map
+    (fn [group]
+    (let [mean (-> (tc/aggregate group #(dfn/mean (% :rating)))
+                    (tc/get-entry "summary" 0))
+            normalized-group (-> (tc/replace-missing group :rating :value mean)
+                                (tc/update-columns :rating [(partial map #(- % mean))]))]
+        {:normal normalized-group
+        :mean mean})) multiple-averages))
+\end{minted}
+
+Az átlagos értékelések el lettek mentve, hogy az adathalmaz rekonstrukciójakor de-normalizálni tudjuk a szavazatokat, megkapva az előrejelzett értékeléseket.
+
+Az SVD kiszámítása a LAPACK lineáris algebra könyvtár Intel MKL implentációja alapján történik.
+
+\begin{minted}[]{clojure}
+
+(def svd (-> (nnat/dge 1680 943 (:rating new-normal))
+            (nlin/svd true true)))
+
+\end{minted}
+
+Az adathalmaz rekonstrukciója során kiválasztjuk a 14 legnagyobb s-értéket, ugyanakkor az \(U\) és \(V^{*}\) mátrixok almátrixait, gyököt vonunk a
+redukált \(\Sigma\) mátrixokból, és újra összeszorozzuk őket, megkapva a 14-es ranggal rendelkező \(\widetilde{M}\) mátrixot.
+
+\begin{minted}[]{clojure}
+
+(def sigma (-> (:sigma svd)
+                (ncore/submatrix 14 14)))
+(def u (ncore/submatrix (:u svd) 1680 14))
+(def vt (ncore/submatrix (:vt svd) 14 943))
+(def s_root (nvmath/sqrt sigma))
+(def usk (ncore/mm u s_root))
+(def skV (ncore/mm s_root vt))
+(def usv (ncore/mm usk skV))
+
+\end{minted}
 
 \bibliographystyle{./abbrvnat_hu.bst}
-\bibliography{/home/hrothgar32/Documents/Egyetem/Allamvizsga/Dolgozat/allamvizsga,/home/hrothgar32/Documents/allamvizsga/allamvizsga}
+\bibliography{/home/hrothgar32/Documents/allamvizsga/allamvizsga}
 \end{document}

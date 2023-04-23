@@ -1,24 +1,23 @@
 #+title: Felhasználói értékeléseken alapuló collaborative filtering algoritmusok kiértékelése funkcionális környezetben
-#+latex_class: book-noparts
+#+LATEX_CLASS: book-noparts
 #+LATEX_CLASS_OPTIONS: [final, 12pt] {ubb_dolgozat}
-#+LATEX_HEADER: \submityear{2022}
-#+LATEX_HEADER: \doctypeHU{Szakdolgozat}
-#+LATEX_HEADER: \doctypeEN{Diploma Thesis}
-#+LATEX_HEADER: \doctypeRO{Lucrare de licenta}
-#+LATEX_HEADER: \specHU{Informatika}
-#+LATEX_HEADER: \specEN{Computer Science}
-#+LATEX_HEADER: \specRO{Informatică}
-#+LATEX_HEADER: \titleHU{Felhasználói értékeléseken alapuló collaborative filtering algoritmusok kiértékelése funkcionális környezetben}
-#+LATEX_HEADER: \titleEN{License thesis title}
-#+LATEX_HEADER: \titleRO{Titlu lucrare licență}
-#+LATEX_HEADER: \authorHU{Zediu Álmos-Ágoston}
-#+LATEX_HEADER: \authorRO{Álmos-Ágoston Zediu}
-#+LATEX_HEADER: \authorEN{Álmos-Ágoston Zediu}
-#+LATEX_HEADER: \tutorHU{dr. Bodó Zalán}
-#+LATEX_HEADER: \tutorRO{dr. Bodó Zalán}
-#+LATEX_HEADER: \tutorEN{dr. Bodó Zalán}
-#+LATEX_HEADER: \pagenumbering{gobble}
-#+bibliography: allamvizsga.bib
+#+LATEX_HEADER_EXTRA: \submityear{2022}
+#+LATEX_HEADER_EXTRA: \doctypeHU{Szakdolgozat}
+#+LATEX_HEADER_EXTRA: \doctypeEN{Diploma Thesis}
+#+LATEX_HEADER_EXTRA: \doctypeRO{Lucrare de licenta}
+#+LATEX_HEADER_EXTRA: \specHU{Informatika}
+#+LATEX_HEADER_EXTRA: \specEN{Computer Science}
+#+LATEX_HEADER_EXTRA: \specRO{Informatică}
+#+LATEX_HEADER_EXTRA: \titleHU{Felhasználói értékeléseken alapuló collaborative filtering algoritmusok kiértékelése funkcionális környezetben}
+#+LATEX_HEADER_EXTRA: \titleEN{License thesis title}
+#+LATEX_HEADER_EXTRA: \titleRO{Titlu lucrare licență}
+#+LATEX_HEADER_EXTRA: \authorHU{Zediu Álmos-Ágoston}
+#+LATEX_HEADER_EXTRA: \authorRO{Álmos-Ágoston Zediu}
+#+LATEX_HEADER_EXTRA: \authorEN{Álmos-Ágoston Zediu}
+#+LATEX_HEADER_EXTRA: \tutorHU{dr. Bodó Zalán}
+#+LATEX_HEADER_EXTRA: \tutorRO{dr. Bodó Zalán}
+#+LATEX_HEADER_EXTRA: \tutorEN{dr. Bodó Zalán}
+#+LATEX_HEADER_EXTRA: \pagenumbering{gobble}
 #+cite_export: natbib ./abbrvnat_hu.bst
 
 * Bevezetés
@@ -39,11 +38,22 @@ Egy másik bemutatott szempont az algoritmusok Clojure nyelvben való implement�
 platformon fut, nagy hangsúlyt fektet az adatvezérelt programozásra, az interaktív, REPL alapú fejlesztésre és a keretrendszerek helyett
 az egyszerű könyvtárakra, melyeket az Unix filozófia alapján modulárisan használunk fel.
 
+* TODO Az adathalmazról
+Az adathalmaz a Minnesotai Egyetem MovieLens adathalmaza, mely 100 000 értékelést tartalmaz 943 felhasználótól
+1682 filmről. [cite:@harperMovieLensDatasetsHistory2016]
 * Clojure
 A Clojure egy dinamikus funkcionális nyelv, mely ötvözi a JVM platform előnyeit a Lisp nyelvek
 kifejezőkészségével.
-** Funkcionális programozás Clojureben
+** Funkcionális nyelvekről kicsit általánosan.
+A funkcionális nyelvek fő alapelve az, hogy nincs mutálható memória, és ahelyett, hogy imperatív, egymáson
+és programállapoton alapuló utasításokkal dolgozunk, előtérbe helyezzük a kifejezéseket, és a "tiszta" mellékhatásoktól
+mentes függvényeket, melyeknek eredménye a bemeneti paraméterektől függ.
 
+** Funkcionális programozás Clojureben
+A Clojure fő filozófiája az egyszerű adatszerkezetekkel, főleg mapekkel való modellezése a problémáknak. Ahelyett, hogy
+bonyolult absztrakciókat képezünk és enkapszuláljuk az adatainkat a rajtuk végzett műveletekkel (ezáltal "objektumokat",
+és "metódusokat képezve"), vagy pedig előbb bonyolult típusosztályokkal algebrai adatstruktúrákat képzünk, előtérbe
+helyezzük az egyszerű adatstruktúrákat, és az egyszerű adatstruktúrákon operáló függvényeket.
 
 A Clojureben a függvények az elsőrendű absztrakciók, képesek vagyunk akár argumentumként is kezelni őket, stb.
 
@@ -56,9 +66,14 @@ A Clojureben a függvények az elsőrendű absztrakciók, képesek vagyunk akár
 
 #+end_src
 
-*** TODO Funkcionális nyelvekről kicsit általánosan.
 ** Perzisztens adatstruktúrák
-Rich Hickey az adatstruktúráit az ideális hasítófákra alapozta [cite:@jayasingheExtremeAmplitudeMassive2019] [cite:@bagwellIdealHashTrees2001]. Egy konceptuális elképzelésért
+Egy lényegi kérdés ami felmerülhet funkcionális nyelvek esetén, az a memóriahasználat, és a futási idő problémája. Mivel minden változó alapvetően konstans, ezért minden egyes olyan
+művelet, ami imperatív nyelvekben az eredeti adatstruktúra változtatását vette volna igénybe (új elem beszúrás, törlés, tulajdonság megváltoztatása), a funkcionális nyelvekben
+egy "módosított" változatát adja vissza az eredeti algoritmusnak. Egy naiv háttérbeli implementáció esetén tehát egy esetleges tömb beszúrásnál le kellene másolni az egész tömböt.
+Itt jön be a perziztencia, és a strukturális megosztás ötlete. Ha van olyan része a memóriának, ami változatlan marad az új adatstruktúrában is, fölösleges azon a memóriarészen levő
+értékeket lemásolni, és több értelme van megosztani vele.
+
+A Clojure alap adatstruktúrái az ideális hasítófákra vannak alapozva. [cite:@jayasingheExtremeAmplitudeMassive2019] [cite:@bagwellIdealHashTrees2001]. Egy konceptuális elképzelésért
 rátekinthetünk erre a képre:
 
 [[file:images/perzisztens-vektor.jpg]]
@@ -123,7 +138,6 @@ kihasználja azt, hogy a "formok" (a Clojure kód kerek zárójelbe helyezett fu
         (recur threaded (next forms)))
       x)))
 #+end_src
-
 * Algoritmusok
 ** Slope one
 A Slope One egy egyszerűen implementálható, de ennek ellenére meglepően jó eredményekkel
@@ -268,7 +282,7 @@ Vagyis annak a valószínűsége, hogy két vektor egyenkénti skaláris szorzat
 bezárt szög koszinuszával.
 Ezt először Goemans és Willamson bizonyította [cite:@goemansImprovedApproximationAlgorithms1995] egy a MAX-CUT relaxációjával foglalkozó cikkükben.
 
-Intuitívan arról van szó, hogy ha veszünk egy \(d\) dimenziós hiperteret, ahol \(d\) az adathalmazunkban levő tárgyak száma, akkor minden felhasználót el tudunk helyezni ebben a
+Intuitívan arról van szó, hogy ha veszünk egy \(d\)  dimenziós hiperteret, ahol \(d\) az adathalmazunkban levő tárgyak száma, akkor minden felhasználót el tudunk helyezni ebben a
 hipertérben, hisz a szavazataik meghatározzák a pozíciójukat, hisz d dimenziós vektorok.
 
 Egy véletlenszerűen felvett vektor normálvektora egy a hiperteret kettéosztó hipersíknak, vagyis
@@ -281,8 +295,117 @@ a felén vannak, ebből következve hasonlóak.
 [[file:images/randomprojection.png]]
 [cite:@RandomProjectionLocality]
 
+*** TODO Implementáció
+Az első lépés a random normálvektorok legenerálása:
 
-** SVD
-[cite:@brandFastOnlineSVD2003]
+#+begin_src clojure
+(defn generate-random-vectors [d nbits]
+  (nrand/rand-normal! 0 1 (nnat/dge d nbits)))
+#+end_src
+
+A függvény amely kiszámítja mely "vödörbe kerül" egy felhasználó az értékelési vektora alapján
+
+#+begin_src clojure
+(def threshold
+  "The sign function which translates a value into a binary 1 or 0."
+  (fn [x]
+    (if (> x 0.0)
+      1.0
+      0.0)))
+
+(defn calculate-lsh-hash
+  "Used to calculate the LSH hash of a random vector."
+  [user-vector rand-normals]
+  (. Integer parseInt (->> (ncore/mv rand-normals user-vector)
+                           (fmap threshold)
+                           (into [])
+                           (map int)
+                           (apply str)) 2))
+
+#+end_src
+
+A függvény amely elvégzi a "vödör" generálást, és feltölti őket.
+
+#+begin_src clojure
+(defn generate-lsh-buckets
+  "Generating the buckets for the stuff."
+  [all-items grouped-ratings rand-normals]
+  (loop [current-rating (first grouped-ratings)
+         remaining-ratings (rest grouped-ratings)
+         current-user (get-in current-rating [:user 0])
+         buckets {}]
+    (let [sparse-vector (-> (get-sparse-ratings all-items current-rating)
+                            (get-sparse-vector))
+          lsh-hash (calculate-lsh-hash sparse-vector rand-normals)
+          new-buckets (if (contains? buckets lsh-hash)
+                        (update buckets lsh-hash conj current-user)
+                        (conj buckets [lsh-hash [current-user]]))]
+      (if (empty? remaining-ratings)
+        new-buckets
+        (recur (first remaining-ratings) (rest remaining-ratings) (get-in (first remaining-ratings) [:user 0]) new-buckets)))))
+#+end_src
+
+** Singular Value Decomposition (SVD)
+*** Definíció
+A Singular Value Decomposition (röviden SVD) egy mátrix faktorizációs módszer, melyben egy \(m  \times  n\) mátrixot felbontunk
+\(M=U \Sigma V^{*}\) módon, ahol \(U\) egy \(m \times n\) alakú unitáris mátrix, \(\Sigma\) egy \(m \times n\) alakú diagonális mátrix, \(V\) pedig egy \(n \times n\)
+unitáris mátrix. \(\Sigma\) átlón elhelyezkedő értékei a négyzetgyökei \(M * M\) sajátértékeinek, és sok SVD implementációban az értékek
+csökkenő sorrendben jelennek meg \(\Sigma\) főátlóján.
+
+*** Felhasználás ajánlórendszerekben
+Hasznossága abban rejlik, hogy ha kiválasztjuk az \(r\) legnagyobb singular value-t (vagy röviden s-értéket) akkor meg tudjuk közelíteni az eredeti \(M\) mátrixot, egy másik, \(\widetilde{M}\) mátrixxal, ahol
+\(rank(\widetilde{M}) = r\) [cite:@eckartApproximationOneMatrix1936a]. Ez azért tud hasznos lenni ajánlórendszerekben, mivel ezáltal le tudjuk redukálni az eltárolandó felhasználó-értékelt objektum
+kapcsolatok számát, és csak a redukált \(r\) rangú \(M, \Sigma, V^{*}\) mátrixokat tárolva helyet spórolunk, ugyanakkor ki tudjuk emelni az \(r\) legfontosabb "látens faktort", amik megadják az összefüggést
+bizonyos felhasználók és bizonyos filmekre adott értékelések között.
+
+*** Implementáció
+Az alkalmazott implementáció alapjául Badrul N. Sarwar, George Karypis etc, Minnesotai Egyetem kutatóinak cikke szolgál, [cite:@sarwarApplicationDimensionalityReduction2000]
+és felbontható a következő stádiumokra:
+
+Az implementációban a normalizálás az objektumok átlagos pontszámai alapján történtek, vagyis csoportosítva lettek a szavazatok objektum szerint és onnan kivontuk az átlagszavazatot:
+
+#+begin_src clojure
+
+(def multiple-averages (-> grouped-ratings
+                    (tc/complete :user :item)
+                    (tc/group-by :item {:result-type :as-seq})))
+
+(def averages
+(map
+    (fn [group]
+    (let [mean (-> (tc/aggregate group #(dfn/mean (% :rating)))
+                    (tc/get-entry "summary" 0))
+            normalized-group (-> (tc/replace-missing group :rating :value mean)
+                                (tc/update-columns :rating [(partial map #(- % mean))]))]
+        {:normal normalized-group
+        :mean mean})) multiple-averages))
+#+end_src
+
+Az átlagos értékelések el lettek mentve, hogy az adathalmaz rekonstrukciójakor de-normalizálni tudjuk a szavazatokat, megkapva az előrejelzett értékeléseket.
+
+Az SVD kiszámítása a LAPACK lineáris algebra könyvtár Intel MKL implentációja alapján történik.
+
+#+begin_src clojure
+
+(def svd (-> (nnat/dge 1680 943 (:rating new-normal))
+            (nlin/svd true true)))
+
+#+end_src
+
+Az adathalmaz rekonstrukciója során kiválasztjuk a 14 legnagyobb s-értéket, ugyanakkor az \(U\) és \(V^{*}\) mátrixok almátrixait, gyököt vonunk a
+redukált \(\Sigma\) mátrixokból, és újra összeszorozzuk őket, megkapva a 14-es ranggal rendelkező \(\widetilde{M}\) mátrixot.
+
+#+begin_src clojure
+
+(def sigma (-> (:sigma svd)
+                (ncore/submatrix 14 14)))
+(def u (ncore/submatrix (:u svd) 1680 14))
+(def vt (ncore/submatrix (:vt svd) 14 943))
+(def s_root (nvmath/sqrt sigma))
+(def usk (ncore/mm u s_root))
+(def skV (ncore/mm s_root vt))
+(def usv (ncore/mm usk skV))
+
+#+end_src
 
 #+print_bibliography:
